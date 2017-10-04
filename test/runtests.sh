@@ -46,7 +46,7 @@ fi
 
 # 4) Setup the DB
 
-echo "Constructing the test DB...               TODO"
+echo "Constucting the test DB...               TODO"
 
 # TODO: Build a test DB filled with random / valid data.  Perhaps using something like
 # Faker - https://github.com/fzaninotto/Faker
