@@ -53,11 +53,13 @@ echo "Constucting the test DB...               TODO"
 
 # 5) Execute tests
 
+echo
 echo "BEGIN TESTS-------------------------------------------------------------------------"
 echo
 ./vendor/bin/phpunit tests
 echo
 echo "END TESTS---------------------------------------------------------------------------"
+echo
 
 # 6) Clean up the DB
 
