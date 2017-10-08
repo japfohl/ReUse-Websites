@@ -45,6 +45,19 @@ echo "DONE"
 
 echo
 echo "3 - UPDATE APACHE DOCUMENT ROOT"
+
+# update the folder apache serves from to be public_html
 echo -n "     Updating apache config file... "
 sudo sed -i -e 's/DocumentRoot \/home\/ubuntu\/workspace/DocumentRoot \/home\/ubuntu\/workspace\/public_html/g' /etc/apache2/sites-enabled/001-cloud9.conf
 echo "DONE"
+
+echo
+echo "4 - INSTALL PROJECT DEPENDENCIES"
+
+# install testing dependencies
+echo -n "     Installing test dependencies... "
+(cd ./test && composer install >/dev/null 2>&1) # parens run in a subshell
+echo "DONE"
+
+# TODO: decide if we want to move the Slim framework from a direct download to a
+# composer managed dependency.
