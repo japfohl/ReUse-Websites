@@ -37,6 +37,51 @@ $ mysql-ctl cli
 $ sudo mysql c9 -N -e 'source someFile.sql;'
 ```
 
+## Developing on OSX
+
+* General dependencies are fairly easy to manage on OSX. First, it is heavily advised to update your PHP version to 7.0, or you may have difficulty running test.
+```bash
+$ curl -s https://php-osx.liip.ch/install.sh | bash -s 7.0
+```
+
+* Then in your bash profile (~/.profile) add this line: `export PATH=/usr/local/[php7 install location]/bin:$PATH`
+where [php7 install location] is the location of the PHP binary in /usr/local/.
+
+* You may want to check your PHP version to see that you've installed things correctly.
+```bash
+$ php -v
+PHP 7.0.24 (cli) (built: Oct  2 2017 09:17:48) ( NTS )
+Copyright (c) 1997-2017 The PHP Group
+Zend Engine v3.0.0, Copyright (c) 1998-2017 Zend Technologies
+    with Zend OPcache v7.0.24, Copyright (c) 1999-2017, by Zend Technologies
+    with Xdebug v2.5.3, Copyright (c) 2002-2017, by Derick Rethans
+```
+
+* Next, you can install MySQL. On OSX it is advised to use the [Homebrew package manager](https://brew.sh/).
+```bash
+$ brew install mysql
+```
+
+* Then you'll want to create the database, create reasonable credentials and and ingest the SQL dump.
+```bash
+$ mysql -e "create database IF NOT EXISTS reuse_db;" -uroot
+$ echo "USE mysql;\nUPDATE user SET password=PASSWORD('password') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
+$ mysql -uroot -ppassword reuse_db < data/ReUseDB.sql
+```
+
+* Then export the values necessary for the API to connect to MySQL, and for the test suite to connect to the API.
+```bash
+$ export REUSE_DB_USER=root
+$ export REUSE_DB_PW=password
+$ export REUSE_DB_URL=127.0.0.1
+$ export REUSE_DB_NAME=reuse_db
+$ export API_ADDR=127.0.0.1:8001 
+```
+Where 8001 can be any unused port number. Keep in mind this number must be the number you use to start the development server
+in the section below.
+
+Please refer to the README documentation contained in the test directory for more information on testing.
+
 ## General Information
 
 ### Starting a Development Server
