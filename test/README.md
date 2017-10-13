@@ -24,10 +24,10 @@ test $ curl -sS https://getcomposer.org/installer | php
 test $ php composer.phar install
 ```
 
-* If you're following these instructions on a version of Linux and the above command generates errors for you, you're probably missing a few basic PHP libraries that can be installed using you system's default package manager.  The following shows how to install on any Debian based Linux distributions:
+* If you're following these instructions on a version of **Linux** and the above command generates errors for you, you're probably missing a few basic PHP libraries that can be installed using you system's default package manager.  The following shows how to install on any Debian based Linux distributions:
 
 ```bash
-$ sudo apt-add-repository ppa:ondreg/php
+$ sudo apt-add-repository ppa:ondrej/php
 $ sudo apt-get update
 $ sudo apt-get install php-xml php-mbstring         # for PHP 5
 # OR
@@ -35,6 +35,15 @@ $ sudo apt-get install php7.0-xml php7.0-mbstring   # for PHP 7.0
 # now rerun the composer install
 test $ php composer.phar install
 ```
+
+* On **OSX**, if you encounter complaints of missing packages your best bet is to simply install a newer version of PHP. 
+```bash
+$ curl -s https://php-osx.liip.ch/install.sh | bash -s 7.0
+```
+
+Then in your bash profile (~/.profile) add this line: `export PATH=/usr/local/[php7 install location]/bin:$PATH`
+where [php7 install location] is the location of the PHP binary in /usr/local/.
+
 
 ### 3) MySQL
 
