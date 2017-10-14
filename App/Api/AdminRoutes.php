@@ -31,10 +31,11 @@ $app->response->headers->set('Content-Type', 'application/json');
 		$mysqli = connectReuseDB();
 
 		$id = (int)$mysqli->real_escape_string($id);
-		$result = $mysqli->query('SELECT name, id 
+		$result = $mysqli->query("SELECT name, id 
 									FROM Reuse_Categories 
-									WHERE Reuse_Categories.id = '.$id.'');
-	    $returnArray = array();
+									WHERE Reuse_Categories.id = '.$id.'");
+
+		$returnArray = array();
 	    while($row = $result->fetch_object()){
 	      $returnArray[] = $row;
 	    }
@@ -59,7 +60,8 @@ $app->response->headers->set('Content-Type', 'application/json');
 	$app->get('/states', function() {
 		$mysqli = connectReuseDB();
 
-		$result = $mysqli->query('SELECT name, id FROM States');
+		$result = $mysqli->query('SELECT name, id 
+											FROM States');
 		$returnArray = array();
 
 	    while($row = $result->fetch_object()){
@@ -77,7 +79,7 @@ $app->response->headers->set('Content-Type', 'application/json');
      * database and the corresponding ID.
   	 * @api {get} /business
  	 * @apiName ReUseApp
-	 * @apiGroup RUapi
+	 * @apiGroup RUapin
 	 *
 	 * @apiSuccess {String} All names and corresponding ID of businesses in the table
 	 */
@@ -86,7 +88,7 @@ $app->response->headers->set('Content-Type', 'application/json');
 		$mysqli = connectReuseDB();
 
     $result = $mysqli->query("SELECT name, id, address_line_1, address_line_2, state_id, phone, website, city, zip_code 
-                               FROM Reuse_Locations");
+                                      FROM Reuse_Locations");
 
 		$returnArray = array();
 	    while($row = $result->fetch_assoc()){
@@ -142,7 +144,10 @@ $app->response->headers->set('Content-Type', 'application/json');
 		$mysqli = connectReuseDB();
 
 		$id = (int)$mysqli->real_escape_string($id);
-		$result = $mysqli->query('SELECT name, id, category_id FROM Reuse_Items WHERE Reuse_Items.id = '.$id.'');
+
+		$result = $mysqli->query("SELECT name, id, category_id 
+										  FROM Reuse_Items 
+										  WHERE Reuse_Items.id = '.$id.'");
 
 
 		$returnArray = array();
@@ -176,7 +181,7 @@ $app->response->headers->set('Content-Type', 'application/json');
 	 */
     $app->get('/business/:one', function($one){
 		$mysqli = connectReuseDB();
-
+        $one = $mysqli->real_escape_string($one);
 		$result = $mysqli->query("SELECT name, id, address_line_1, address_line_2, state_id, phone, website, city, zip_code 
 								   FROM Reuse_Locations 
 								   WHERE Reuse_Locations.id = '$one'");
@@ -200,7 +205,9 @@ $app->response->headers->set('Content-Type', 'application/json');
 	$app->get('/businessSearch/:term', function($term){
 		$mysqli = connectReuseDB();
 
-		$result = $mysqli->query("SELECT name, id, address_line_1, address_line_2, state_id, phone, website, city, zip_code 
+		$term = $mysqli->real_escape_string($term);
+
+        $result = $mysqli->query("SELECT name, id, address_line_1, address_line_2, state_id, phone, website, city, zip_code 
 								   FROM Reuse_Locations 
 								   WHERE Reuse_Locations.name LIKE '%$term%'");
 
@@ -224,9 +231,12 @@ $app->response->headers->set('Content-Type', 'application/json');
 	$app->get('/categorySearch/:term', function($term){
 		$mysqli = connectReuseDB();
 
-		$result = $mysqli->query("SELECT name, id 
-								   FROM Reuse_Categories 
-								   WHERE Reuse_Categories.name LIKE '%$term%'");
+		$term = $mysqli->real_escape_string($term);
+
+        $result = $mysqli->query("SELECT name, id 
+								   		  FROM Reuse_Categories 
+								   		  WHERE Reuse_Categories.name 
+								   		  LIKE '%$term%'");
 
 		$returnArray = array();
 		while($row = $result->fetch_object()){
@@ -248,9 +258,12 @@ $app->response->headers->set('Content-Type', 'application/json');
 	$app->get('/itemSearch/:term', function($term){
 		$mysqli = connectReuseDB();
 
-		$result = $mysqli->query("SELECT name, id, category_id 
-								   FROM Reuse_Items 
-								   WHERE Reuse_Items.name LIKE '%$term%'");
+		$term = $mysqli->real_escape_string($term);
+
+        $result = $mysqli->query("SELECT name, id, category_id 
+								          FROM Reuse_Items 
+								          WHERE Reuse_Items.name 
+								          LIKE '%$term%'");
 
 		$returnArray = array();
 		while($row = $result->fetch_object()){
@@ -302,6 +315,7 @@ $app->response->headers->set('Content-Type', 'application/json');
 	*/
 	$app->get('/items/:cat', function($cat){
 		$mysqli = connectReuseDB();
+        $cat = $mysqli->real_escape_string($cat);
 
 		$result = $mysqli->query("SELECT name, id, category_id 
 									FROM Reuse_Items WHERE Reuse_Items.category_id = '".$cat."'");
@@ -327,6 +341,8 @@ $app->response->headers->set('Content-Type', 'application/json');
 	 */
 	$app->get('/businessdocs/:id', function($id) {
 		$mysqli = connectReuseDB();
+
+        $id= $mysqli->real_escape_string($id);
 
 		$result = $mysqli->query("SELECT id, name, URI 
 								  FROM Reuse_Documents WHERE location_id = '$id'");
@@ -359,6 +375,7 @@ $app->response->headers->set('Content-Type', 'application/json');
 	 */
     $app->delete('/business/:id', function($id){
 		$mysqli = connectReuseDB();
+
 		$delID = $mysqli->real_escape_string($id);
 
 		$mysqli->query("DELETE FROM Reuse_Locations_Items WHERE location_id = '$delID'");
@@ -494,6 +511,8 @@ $app->response->headers->set('Content-Type', 'application/json');
 		$name = $_POST['name'];
 
 		$mysqli = connectReuseDB();
+        $oldName= $mysqli->real_escape_string($oldName);
+        $name = $mysqli->real_escape_string($name);
 
 		if($oldName != 'undefined' && $name != 'undefined'){
 			$mysqli->query("UPDATE Reuse_Categories SET name = '$name' WHERE name = '$oldName'");
@@ -522,11 +541,19 @@ $app->response->headers->set('Content-Type', 'application/json');
 
 		$mysqli = connectReuseDB();
 
+        $oldName= $mysqli->real_escape_string($oldName);
+        $name = $mysqli->real_escape_string($name);
+        $cat = $mysqli->real_escape_string($cat);
+
 		if($name != 'undefined' && $oldName != 'undefined'){
-			$mysqli->query("UPDATE Reuse_Items SET name = '$name' WHERE name = '$oldName'");
+			$mysqli->query("UPDATE Reuse_Items 
+								   SET name = '$name' 
+								   WHERE name = '$oldName'");
 		}
 		if($cat != 'undefined' && $oldName != 'undefined'){
-			$mysqli->query("UPDATE Reuse_Items SET category_id = '$cat' WHERE name = '$oldName'");
+			$mysqli->query("UPDATE Reuse_Items 
+									SET category_id = '$cat' 
+									WHERE name = '$oldName'");
 		}
 		$mysqli->close();
 
@@ -552,20 +579,21 @@ $app->response->headers->set('Content-Type', 'application/json');
 	 * @apiParam {string} zip Zipcode
 	 */
 	$app->post('/changeBusiness', function(){
+        $mysqli = connectReuseDB();
 
-		$oldName = $_POST['oldName'];
-		$name = $_POST['name'];
-		$address = $_POST['add1'];
-		$address2 = $_POST['add2'];
-		$zipcode = $_POST['zip'];
-		$city = $_POST['city'];
-		$state = $_POST['state'];
-		$phone = $_POST['phone'];
-		$website = $_POST['website'];
-		$latitude = $_POST['latitude'];
-		$longitude = $_POST['longitude'];
+		$oldName =  $mysqli->real_escape_string($_POST['oldName']);
+		$name = $mysqli->real_escape_string($_POST['name']);
+		$address = $mysqli->real_escape_string($_POST['add1']);
+		$address2 = $mysqli->real_escape_string($_POST['add2']);
+		$zipcode = $mysqli->real_escape_string($_POST['zip']);
+		$city = $mysqli->real_escape_string($_POST['city']);
+		$state = $mysqli->real_escape_string($_POST['state']);
+		$phone = $mysqli->real_escape_string($_POST['phone']);
+		$website = $mysqli->real_escape_string($_POST['website']);
+		$latitude = $mysqli->real_escape_string($_POST['latitude']);
+		$longitude = $mysqli->real_escape_string($_POST['longitude']);
 
-		$mysqli = connectReuseDB();
+
 		if($state != 'undefined' && $oldName != 'undefined'){
 			$mysqli->query("UPDATE Reuse_Locations SET state_id = '$state' WHERE name = '$oldName'");
 		}
@@ -792,13 +820,18 @@ $app->post('/category', function(){
 	 * @apiParam {string} name Item name to set
 	 */
 $app->post('/updateItems', function(){
-		$category = $_POST['category'];
+		$cat = $_POST['category'];
 		$name = $_POST['name'];
 
 		$mysqli = connectReuseDB();
 
-		if($category != 'undefined' && $name != 'undefined'){
-			$mysqli->query("UPDATE Reuse_Items SET category_id = '$category' WHERE Reuse_Items.name = '$name'");
+		$name = $mysqli->real_escape_string($name);
+    	$cat = $mysqli->real_escape_string($cat);
+
+
+
+		if($cat != 'undefined' && $name != 'undefined'){
+			$mysqli->query("UPDATE Reuse_Items SET category_id = '$cat' WHERE Reuse_Items.name = '$name'");
 		}
 		$mysqli->close();
 });
@@ -815,7 +848,7 @@ $app->post('/updateBusiness', function(){
 		$name = $_POST['name'];
 
 		$mysqli = connectReuseDB();
-
+    	$name = $mysqli->real_escape_string($name);
 		/* get location id based off name */
 		$result = $mysqli->query("SELECT name, id FROM Reuse_Locations");
         while($row = $result->fetch_object()){
@@ -912,7 +945,8 @@ $app->post('/addBusinessDoc', function(){
 
 		$doc_name = $_POST['doc_name'];
 		$doc_url = $_POST['doc_url'];
-        $business_id =(int)$_POST['business_id'];
+
+		$business_id =(int)$_POST['business_id'];
 		$mysqli = connectReuseDB();
 		$trigger = 1;
 		/* Check to  make sure it's not a duplicate */

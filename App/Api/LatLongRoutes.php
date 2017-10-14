@@ -11,7 +11,11 @@
 		
 		//getting old addresses and ids
 		
-		$result = $mysqli->query("SELECT DISTINCT loc.id, loc.address_line_1, state.abbreviation, loc.city, loc.zip_code FROM Reuse_Locations AS loc LEFT JOIN States AS state ON state.id = loc.state_id WHERE loc.latitude IS NULL OR loc.longitude IS NULL");
+		$result = $mysqli->query("SELECT DISTINCT loc.id, loc.address_line_1, state.abbreviation, loc.city, loc.zip_code
+ 
+										FROM Reuse_Locations AS loc 
+										LEFT JOIN States AS state ON state.id = loc.state_id 
+										WHERE loc.latitude IS NULL OR loc.longitude IS NULL");
 
 		$returnArray = array();
 	    while($row = $result->fetch_object()){
@@ -36,7 +40,9 @@
 					$latitude = $latlong['lat'];
 					$longitude = $latlong['long'];
 				
-					$mysqli->query("UPDATE Reuse_Locations SET latitude = '$latitude', longitude = '$longitude' WHERE id = '$id'");
+					$mysqli->query("UPDATE Reuse_Locations 
+										    SET latitude = '$latitude', longitude = '$longitude' 
+										    WHERE id = '$id'");
 					
 				}
 			}
