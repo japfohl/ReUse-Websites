@@ -8,7 +8,6 @@
 **********************************************************************/
 
 require_once dirname(__FILE__).'/../../vendor/autoload.php';
-require_once dirname(__FILE__).'/../../App/Database/reuseConnect.php';
 
 use \Slim\Slim;
 use \Slim\Middleware\SessionCookie;
