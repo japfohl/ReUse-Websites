@@ -10,12 +10,13 @@ $app->get('/admin', function() use ($app) {
   $app->redirect("/AdminSite2/loginPage.php");
 });
 
+// TODO: Figure out if we actually need to set the response type here.
 $app->response->headers->set('Content-Type', 'application/json');
 // API group
     $app->group('/RUapi', function () use ($app) {
 
     /****************************************************************************
-    *				Gets
+    *               Gets
     ****************************************************************************/
 
     /***
@@ -347,7 +348,7 @@ $app->response->headers->set('Content-Type', 'application/json');
 
 
 /************************************************************************************
-*					DELETES
+*                   DELETES
 *************************************************************************************/
 
     /**
@@ -461,7 +462,7 @@ $app->response->headers->set('Content-Type', 'application/json');
     });
 
 /******************************************************************************************
-*				PUTS -- doing it as POSTS with UPDATES to avoid form issues
+*               PUTS -- doing it as POSTS with UPDATES to avoid form issues
 ******************************************************************************************/
 
 
@@ -606,7 +607,7 @@ $app->response->headers->set('Content-Type', 'application/json');
 
 
 /*****************************************************************************************
-*			POSTS
+*           POSTS
 ******************************************************************************************/
 
         /* update business */

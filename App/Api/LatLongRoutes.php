@@ -1,12 +1,11 @@
 <?php
 
 /******************************************************************************************
-*		Special Route the Updates Every Business with a Latitude and Longitude
+*       Special Route the Updates Every Business with a Latitude and Longitude
 ******************************************************************************************/
 
 /* Updates all businesses with lats and longs */
-$app->get('/setLatLongs', function()
-{
+$app->get('/setLatLongs', function() {
 
     $mysqli = connectReuseDB();
 
@@ -19,27 +18,23 @@ $app->get('/setLatLongs', function()
 
     $returnArray = array();
 
-    while($row = $result->fetch_object())
-    {
+    while($row = $result->fetch_object()) {
       $returnArray[] = $row;
     }
 
     $result->close();
 
-    for($i = 0; $i < count($returnArray); $i++)
-    {
+    for($i = 0; $i < count($returnArray); $i++) {
         $id = $returnArray[$i]->id;
         $address = $returnArray[$i]->address_line_1;
         $city = $returnArray[$i]->city;
         $state = $returnArray[$i]->abbreviation;
         $zipcode = $returnArray[$i]->zip_code;
 
-        if($address != NULL && $city != NULL && $state != NULL && $zipcode != NULL)
-        {
+        if($address != NULL && $city != NULL && $state != NULL && $zipcode != NULL) {
             $latlong = bingGeocode($address, $city, $state, $zipcode);
 
-            if ($latlong != false)
-            {
+            if ($latlong != false) {
                 $latitude = $latlong['lat'];
                 $longitude = $latlong['long'];
 
