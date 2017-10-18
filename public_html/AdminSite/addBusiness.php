@@ -15,10 +15,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Corvallis Reuse and Repair Directory: Web Portal</title>
+  <noscript><meta http-equiv="refresh" content="0; URL=../HomeSite/HomeSite.html"></noscript>
   <link href="../Css/bootstrap.css" rel="stylesheet">
   <link href="../Css/customStylesheet.css" rel="stylesheet">
   <link href="../Css/media.css" rel="stylesheet">
