@@ -980,21 +980,21 @@
 	* @apiSuccess {String} The name of the category corresponding to that ID
 	*/
 	$app->get('/category/:id', function($id){
-	$mysqli = connectReuseDB();
+		$mysqli = connectReuseDB();
 
-	$id = (int)$mysqli->real_escape_string($id);
-	$result = $mysqli->query("SELECT name, id 
-							    FROM Reuse_Categories 
-							    WHERE Reuse_Categories.id = '.$id.'");
-	$returnArray = array();
-	while($row = $result->fetch_object()){
-		$returnArray[] = $row;
-	}
+		$id = (int)$mysqli->real_escape_string($id);
+		$result = $mysqli->query("SELECT name, id 
+									FROM Reuse_Categories 
+									WHERE Reuse_Categories.id = '$id'");
+		$returnArray = array();
+		while($row = $result->fetch_object()){
+			$returnArray[] = $row;
+		}
 
-	echo json_encode($returnArray);
+		echo json_encode($returnArray);
 
-	$result->close();
-	$mysqli->close();
+		$result->close();
+		$mysqli->close();
 	});
 
 	?>
