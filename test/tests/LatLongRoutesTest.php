@@ -19,7 +19,7 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase
     // class properties
     protected $client;  // Guzzle HTTP client
     protected $db;  // mysqli client
-    protected $locIds;  // array of randomly generated location ids
+    protected $locIds;  // array of generated location ids
 
 
     // create a new Guzzle client before running each test
@@ -28,7 +28,10 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase
         $this->client = new Client(['base_uri' => getenv('API_ADDR')]);
         $this->db = connectReuseDB();
         $this->locIds = $this->insertTestLocations();
-        // TODO: handle when insert locaitons returns null on error
+        if ($this->locIds == null)
+        {
+           // TODO: handle null location ids 
+        }
     }
 
     protected function tearDown()
@@ -57,7 +60,7 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase
                 return null;
             }
 
-            // TODO: Get state id to use for next bind
+            
 
             if (!($stmt->bind_param(self::NAMES[$i], self::ADDRESSES[$i], self::CITIES[$i], self::STATES[$i], self::ZIP_CODES[$i])))
             {
