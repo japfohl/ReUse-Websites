@@ -284,40 +284,32 @@ function addBusinessList(categoryName, itemName, type) {
 	};
 	
 	
-	if((type === "reuse" && categoryName === undefined || type === "reuse" && itemName === undefined) && (type === "reuse" && categoryName === "" || type === "reuse" && itemName === "")) {//selecting all businesses in the Reuse category if none is specified
+	if (type === "reuse" && !(categoryName || itemName)) {
+		// neither category nor item set
 		var busURI = APIBase + "/business/reuseExclusive";
-	}
-        else if ((type === "repair" && categoryName === undefined || type === "repair" && itemName === undefined) && (type === "repair" && categoryName === "" || type === "repair" && itemName === "")) {
-            var busURI = APIBase + "/business/repairExclusive";
-	}
-        //if a category is given but not an item, list all businesses associated with a category for reuse or repair
-	else if (type === "reuse" && itemName === undefined || type === "reuse" && itemName === "") {
+	} else if (type === "repair" && !(categoryName || itemName)) {
+        // neither category nor item set
+		var busURI = APIBase + "/business/repairExclusive";
+	} else if (type === "reuse" && !itemName) {
+		// only category name set
 		var busURI = APIBase + "/reuse/business/category/name/" + categoryName;
-	}
-        else if (type === "repair" && itemName === undefined || type === "repair" && itemName === "") {
+	} else if (type === "repair" && !itemName) {
+        // only category name set
 		var busURI = APIBase + "/repair/business/category/name/" + categoryName;
-	}
-        //if an item is given but not a category, list all businesses associated with an item for reuse or repair
-	else if (type === "reuse" && categoryName === undefined || type === "reuse" && categoryName === "") {
+	} else if (type === "reuse" && !categoryName) {
+		// only item name set
 		var busURI = APIBase + "/reuse/business/item/name/" + itemName;
-	}
-        else if (type === "repair" && categoryName === undefined || type === "repair" && categoryName === "") {
+	} else if (type === "repair" && !categoryName) {
+        // only item name set
 		var busURI = APIBase + "/repair/business/item/name/" + itemName;
-	}
-	else if (categoryName === "Recycle" && itemName === "Recycle") {// if the special case used for recycling centers is used 
+	} else if (categoryName === "Recycle" && itemName === "Recycle") {
 		var busURI = APIBase + "/business/recycleExclusive";
-	}
-        //if both category and item names are given, list all businesses associated with both for reuse or repair
-	else if (type === "reuse"){
-		
+	} else if (type === "reuse"){
 		var busURI = APIBase + "/reuse/business/category/name/" + categoryName + "/item/name/" + itemName;
-	}
-        else if (type === "repair"){
-	
+	} else if (type === "repair"){
 		var busURI = APIBase + "/repair/business/category/name/" + categoryName + "/item/name/" + itemName;
 	}
 
-	
 	req.open("GET", busURI, true);
 	req.send();
 }

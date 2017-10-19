@@ -49,8 +49,6 @@ function slashToUnderscore(string) {
 
 // Function to get a list of items matching the search term.
 function getItems(search_term) {
-    //console.log("Items search with " + search_term);
-    // Search for items matching like search_term
     $.ajax({
         type: "GET",
         url: "/itemSearch/" + search_term,
@@ -66,48 +64,44 @@ function getItems(search_term) {
                 //console.log("My type: " + item_type);
                 //console.log(category_ID);
                 //Now let's get the category name to
-                getCat(item_name, category_ID, item_type);
-                function getCat(item_name, category_ID, item_type) {
-                    $.ajax({
-                        type: "GET",
-                        url: "/category/" + category_ID,
-                        dataType: 'json',
-                        success: function(cat_data) {
-                            //console.log(cat_data);
-                            var category_name = cat_data[0].name;
+                $.ajax({
+                    type: "GET",
+                    url: "/category/" + category_ID,
+                    dataType: 'json',
+                    success: function(cat_data) {
+                        //console.log(cat_data);
+                        var category_name = cat_data[0].name;
 
-                            var listDiv = document.getElementById("category-list-container");
-                            listDiv.className += " list-group";
+                        var listDiv = document.getElementById("category-list-container");
+                        listDiv.className += " list-group";
 
-                            // Decide between item types
-                            var type = ""
-                            if (item_type == 0) {
-                                type = "reuse";
-                            }
-                            else if (item_type == 1) {
-                                type = "repair";
-                            }
-                            else {
-                                type = "unknown"
-                            }
-
-
-                            //the link
-                            var link = document.createElement("a");
-                            link.className = "list-group-item";
-                            link.className += " list-item-title";
-                            link.setAttribute('href', "item.php?type=" + type + "&cat=" + category_name +"&item=" + item_name);
-
-                            //the item name
-                            var itemName = document.createTextNode(category_name + ": " + item_name);
-                            itemName.className = "list-group-item-heading";
-                            link.appendChild(itemName);
-
-                            listDiv.appendChild(link);
+                        // Decide between item types
+                        var type = ""
+                        if (item_type == 0) {
+                            type = "reuse";
                         }
-                    });
-                }
+                        else if (item_type == 1) {
+                            type = "repair";
+                        }
+                        else {
+                            type = "unknown"
+                        }
 
+
+                        //the link
+                        var link = document.createElement("a");
+                        link.className = "list-group-item";
+                        link.className += " list-item-title";
+                        link.setAttribute('href', "item.php?type=" + type + "&cat=" + category_name +"&item=" + item_name);
+
+                        //the item name
+                        var itemName = document.createTextNode(category_name + ": " + item_name);
+                        itemName.className = "list-group-item-heading";
+                        link.appendChild(itemName);
+
+                        listDiv.appendChild(link);
+                    }
+                });
             }
 
         }
@@ -258,16 +252,8 @@ function getBusinesses(search_term) {
 
 // Main function for searching a specific term
 function searchTerm(search_term) {
-    //console.log("My term " + search_term);
-
-    // Replace any slashes with underscore to the term
-    var old_term = search_term;
-    search_term = slashToUnderscore(search_term);
-
-    document.getElementsByClassName("side-container-title")[0].innerHTML = "Search results containing '" + decodeURI(search_term) + "'";
-
-    // Make the list
-    //makeList(search_term)
+    document.getElementsByClassName("side-container-title")[0].innerHTML =
+        "Search results containing '" + decodeURI(slashToUnderscore(search_term)) + "'";
 
     // Get Items, has data of items with category ID.  Category ID needs to be looked up to get the category name.
     getItems(search_term);
