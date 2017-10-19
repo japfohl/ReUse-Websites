@@ -25,10 +25,9 @@
 </head>
 
 <body>
+
 <div class="container">
-    <?php
-				include 'header.php';
-			?>
+    <?php include 'header.php'; ?>
     <div class="category-container">
 
         <div id="category-list-container">
@@ -39,38 +38,33 @@
             <div id="map"></div>
         </div>
     </div>
-
-    <?php
-				include 'footer.php';
-			?>
+    <?php include 'footer.php'; ?>
 </div> <!-- /container -->
-<!-- Map JS,  Needs effort on map, so if a business shows up on the search with an address, a pin displays location on the map
+
+<!-- Map JS,  Needs effort on map, so if a business shows up on the search with an address, a pin displays location on the map -->
 <script src="../js/mapFunct.js" type="text/javascript"></script>
 <script>
+    function initSearchMapWrapper() {
+        var search_term = encodeURI("<?php if(isset($_REQUEST['term'])) {
+            echo $_REQUEST['term'];}?>"
+        );
 
-    function initCategoryMapWrapper() {
-        var search_term = encodeURI("<?php if(isset($_REQUEST['term'])) {echo $_REQUEST['term'];}?>");
-
-        if(search_term == "") {
-            initCategoryMap();
-        }
-        else {
-            initCategoryMap(search_term);
-        }
+        initSearchMap(search_term);
     }
-
-
 </script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiF8JALjnfAymACLHqPAhlrLlUj3y9DTo&callback=initCategoryMapWrapper">
-</script> -->
+<script defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiF8JALjnfAymACLHqPAhlrLlUj3y9DTo&callback=initSearchMapWrapper">
+</script>
+
 <!-- List JS -->
 <script src="../js/searchPage.js" type="text/javascript"></script>
 <script>
-    var search_term = encodeURI("<?php if(isset($_REQUEST['term'])) {echo $_REQUEST['term'];}?>");
-    //console.log(search_term);
+    var search_term = encodeURI("<?php if(isset($_REQUEST['term'])) {
+        echo $_REQUEST['term'];}?>"
+    );
+
     searchTerm(search_term);
-    //addItemList(catName);
 </script>
+
 </body>
 </html>

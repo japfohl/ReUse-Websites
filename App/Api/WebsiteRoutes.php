@@ -970,6 +970,34 @@
 
 	});
 
+	$app->get( '/item/:term', function($term) {
+		$mysqli = connectReuseDB();
+
+		$term = $mysqli->real_escape_string($term);
+		$query = "SELECT DISTINCT loc.id, loc.name, loc.address_line_1, loc.address_line_2, loc.city, 
+							States.abbreviation, loc.zip_code, loc.phone, loc.website, loc.latitude, loc.longitude
+					  FROM Reuse_Locations loc 
+					  INNER JOIN Reuse_Locations_Items rla ON loc.id = rla.location_id
+					  INNER JOIN Reuse_Items item ON rla.item_id = item.id
+					  LEFT JOIN States ON States.id = loc.state_id
+					  WHERE 
+					  	(item.name LIKE '%$term%') OR
+					  	(loc.name LIKE '%$term%')
+					  ORDER BY loc.name ASC;";
+
+		$res = $mysqli->query($query);
+
+		$returnArr = array();
+		while ($row = $res->fetch_object()) {
+			$returnArr[] = $row;
+		}
+
+		echo json_encode($returnArr);
+
+		$res->close();
+		$mysqli->close();
+	});
+
 	/***
 	* @api {get} /category/:id
 	* @apiName ReUseApp
@@ -980,21 +1008,21 @@
 	* @apiSuccess {String} The name of the category corresponding to that ID
 	*/
 	$app->get('/category/:id', function($id){
-	$mysqli = connectReuseDB();
+		$mysqli = connectReuseDB();
 
-	$id = (int)$mysqli->real_escape_string($id);
-	$result = $mysqli->query("SELECT name, id 
-							    FROM Reuse_Categories 
-							    WHERE Reuse_Categories.id = '.$id.'");
-	$returnArray = array();
-	while($row = $result->fetch_object()){
-		$returnArray[] = $row;
-	}
+		$id = (int)$mysqli->real_escape_string($id);
+		$result = $mysqli->query("SELECT name, id 
+									FROM Reuse_Categories 
+									WHERE Reuse_Categories.id = '$id'");
+		$returnArray = array();
+		while($row = $result->fetch_object()){
+			$returnArray[] = $row;
+		}
 
-	echo json_encode($returnArray);
+		echo json_encode($returnArray);
 
-	$result->close();
-	$mysqli->close();
+		$result->close();
+		$mysqli->close();
 	});
 
 	?>
