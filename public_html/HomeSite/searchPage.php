@@ -44,22 +44,16 @@
 <!-- Map JS,  Needs effort on map, so if a business shows up on the search with an address, a pin displays location on the map -->
 <script src="../js/mapFunct.js" type="text/javascript"></script>
 <script>
+    function initSearchMapWrapper() {
+        var search_term = encodeURI("<?php if(isset($_REQUEST['term'])) {
+            echo $_REQUEST['term'];}?>"
+        );
 
-    function initCategoryMapWrapper() {
-        var search_term = encodeURI("<?php if(isset($_REQUEST['term'])) {echo $_REQUEST['term'];}?>");
-
-        if(search_term == "") {
-            initCategoryMap();
-        }
-        else {
-            initCategoryMap(search_term);
-        }
+        initSearchMap(search_term);
     }
-
-
 </script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiF8JALjnfAymACLHqPAhlrLlUj3y9DTo&callback=initCategoryMapWrapper">
+<script defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiF8JALjnfAymACLHqPAhlrLlUj3y9DTo&callback=initSearchMapWrapper">
 </script>
 
 <!-- List JS -->

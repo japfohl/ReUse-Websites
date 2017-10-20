@@ -975,12 +975,14 @@
 
 		$term = $mysqli->real_escape_string($term);
 		$query = "SELECT DISTINCT loc.id, loc.name, loc.address_line_1, loc.address_line_2, loc.city, 
-							States.name, loc.zip_code, loc.phone, loc.website, loc.latitude, loc.longitude
+							States.abbreviation, loc.zip_code, loc.phone, loc.website, loc.latitude, loc.longitude
 					  FROM Reuse_Locations loc 
 					  INNER JOIN Reuse_Locations_Items rla ON loc.id = rla.location_id
 					  INNER JOIN Reuse_Items item ON rla.item_id = item.id
 					  LEFT JOIN States ON States.id = loc.state_id
-					  WHERE item.name LIKE '%$term%'
+					  WHERE 
+					  	(item.name LIKE '%$term%') OR
+					  	(loc.name LIKE '%$term%')
 					  ORDER BY loc.name ASC;";
 
 		$res = $mysqli->query($query);

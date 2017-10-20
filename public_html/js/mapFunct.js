@@ -1,4 +1,3 @@
-var APIBase = "http://localhost/Corvallis-Sustainability-ReUse/public_html/index.php"; //used for local development by Lauren Miller
 var APIBase = ""; //used by the live website
 
 // Returns a pin with the passed color, or CSC orange by default. Reference http://stackoverflow.com/questions/7095574/google-maps-api-3-custom-marker-color-for-default-dot-marker/7686977#7686977
@@ -37,7 +36,7 @@ function corvallisMap () {
 function centeredMap (busLat, busLng) {
 
 	var  mapCenter = LatLng(busLat, busLng);
-	var map = new google.maps.Map(document.getElementById('map'), {
+	var map = new google.maps.Map(document.querySelector('#map'), {
 		zoom: 11,
 		center: mapCenter
 	});
@@ -379,7 +378,36 @@ function initBusinessMap(busName) {
 }
 
 
+function initSearchMap(term) {
+	// create map
+	var map;
 
-  
-  
-  
+	// depends on jQuery being available
+    $.ajax({
+        type: "GET",
+        url: "/item/" + term,
+        dataType: 'json',
+        success: function(res) {
+            //printing the default error map if no results
+            if(res.length === 0) {
+                document.querySelector("p.side-container-title").innerHTML =
+					"No results for term '" + term + "'.";
+            } else if (res.length === 1 && res[0].latitude && res[0].longitude) {
+                map = centeredMap(res[0].latitude, res[0].longitude);
+			} else {
+            	map = corvallisMap();
+			}
+
+            //placing the pins
+            for(i = 0; i < res.length; i++) {
+
+                var pinImage = pin();
+                var myLatLng = LatLng(res[i].latitude, res[i].longitude);
+                var myMarker = marker(myLatLng, map, pinImage, res[i].name, res[i].address_line_1,
+					res[i].city, res[i].abbreviation, res[i].zip_code);
+
+                addInfoWindow(myMarker, map);
+            }
+        }
+    });
+}

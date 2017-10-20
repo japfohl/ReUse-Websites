@@ -318,7 +318,7 @@ function addBusinessList(categoryName, itemName, type) {
 function addBusinessContact(busName) {
 	
 	//setting the page title
-	document.getElementsByClassName("side-container-title")[0].innerHTML = decodeURI(busName);
+	document.getElementsByClassName("side-container-title")[0].innerHTML = decodeURIComponent(busName);
 	document.title = decodeURI(busName);
 	
 	busName = slashToUnderscore(busName);
