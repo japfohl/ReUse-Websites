@@ -9,7 +9,7 @@
 
   /* start session */
   session_start();
-
+  include("checkSession.php");
 
 ?>
 

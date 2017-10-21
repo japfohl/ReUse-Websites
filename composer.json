@@ -14,7 +14,8 @@
        "src/lib/xmlGenerator.php"
      ],
      "classmap": [
-       "src/view/ViewRenderer.php"
+       "src/view/ViewRenderer.php",
+       "src/test/ApiTestCase.php"
      ]
    }
 }

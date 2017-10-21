@@ -4,6 +4,6 @@ so that users will be redirected to login if they are not logged in -->
   	session_start();
 
 	if(!(isset($_SESSION['username'])) || $_SESSION['username'] == "") {
-    header( 'Location: /admin2/loginPage.php' ) ;
+    	header( 'Location: /AdminSite/loginPage.php' ) ;
    	}
 ?>

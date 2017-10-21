@@ -1,14 +1,15 @@
 <?php
   /**********************************************************************
-  *          Session set up
-  **********************************************************************/
-
+   *          Session set up
+   **********************************************************************/
+  
   /* error check */
   error_reporting(E_ALL);
   ini_set('display_errors', 1);
-
+  
   /* start session */
   session_start();
+  include("checkSession.php");
 
 ?>
 
