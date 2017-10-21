@@ -70,11 +70,11 @@ class Query {
         $db = connectReuseDB();
         return $db->query(
             "SELECT DISTINCT c.name, c.id
-			 FROM Reuse_Locations_Items l
-			 JOIN Reuse_Items i ON l.item_id = i.id
-			 JOIN Reuse_Categories c ON i.category_id = c.id
-			 WHERE l.Type = 0
-			 ORDER BY c.name ASC"
+             FROM Reuse_Locations_Items l
+             JOIN Reuse_Items i ON l.item_id = i.id
+             JOIN Reuse_Categories c ON i.category_id = c.id
+             WHERE l.Type = 0
+             ORDER BY c.name ASC"
         );
     }
 }
