@@ -90,7 +90,11 @@ function allBusinesses() {
             $('#EditData2').empty();
             var row = '<tr><th><span class="locked">' + 'Name' + '</span></th><th><span class="locked">' + 'Address' + '</span></th><th><span class="locked">' + 'Modify' + '</span></th><th><span class="locked">' + 'Delete' + '</span></th></tr>';
             for (var i = 0; i < data.length; i++) {
-                row += '<tr><td>' + data[i].name + '</td><td>' + data[i].address_line_1 + '</td><td>' + "<button value='" + data[i].name + "' type=submit id=edit onclick='editBusinessHelper(this.value); return false;'>" + 'Edit' + "</button>" + '</td><td>' + '<input type= hidden id= delete value=' + data[i].id + '><input class= del type= submit value= Delete id= ' + data[i].id + ' onclick=delBusiness(this.id)>' + '</td>' + '</tr>';
+                row += '<tr><td>' + data[i].name + '</td><td>' + data[i].address_line_1 + 
+                '</td><td>' + "<button value='" + data[i].id + "' type=submit id=edit onclick='editBusinessHelper(this.value); return false;'>" +
+                'Edit' + "</button>" + '</td><td>' + '<input type= hidden id= delete value=' +
+                data[i].id + '><input class= del type= submit value= Delete id= ' + data[i].id +
+                ' onclick=delBusiness(this.id)>' + '</td>' + '</tr>';
             }
             $('#table').append(row);
         },
@@ -101,9 +105,9 @@ function allBusinesses() {
 // function searchBusiness()
 // purpose: function to call searchBusiness when one of the list businesses is selected
 // */
-function editBusinessHelper(name) {
+function editBusinessHelper(id) {
   clearAll();
-    $('#searchName')[0].value = '' + name + '';
+    $('#searchName')[0].value = '' + id + '';
     editBusiness();
 }
 
@@ -113,7 +117,6 @@ function delBusiness()
 purpose: delete business by id
 */
 function delBusiness(match) {
-    console.log(match);
     $.ajax({
         type: "DELETE",
         url: webURL + "/RUapi/business/" + match,
@@ -163,8 +166,7 @@ function editBusiness() {
     // $('#searchForm').hide();
     clearAll();
     $('#editFields').show();
-    var nameOfBizToEdit =  $('#searchName').val();
-
+    var nameOfBizToEdit = $('#searchName').val();
 
     //Fill the search forms with data
     $.ajax({

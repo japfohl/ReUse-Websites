@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 
 // example test case
-final class ExampleTest extends ApiTestCase
+final class AdminRoutesTest extends ApiTestCase
 {
     // the GuzzleHttp client
     protected $client;
@@ -22,6 +22,17 @@ final class ExampleTest extends ApiTestCase
     public function testHelloNameRouteReturnsHelloAndProvidedName()
     {
         $response = $this->client->request('GET', '/hello/testName');
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testAddBusinessDocRoute()
+    {
+        $response = $this->client->request('POST', '/RUapi/addBusinessDoc', [
+            'json' => ['doc_name' => 'my_special_document', 
+                       'doc_url' => 'https://www.google.com',
+                       'business_id' => 1]
+        ]);
+
         $this->assertEquals(200, $response->getStatusCode());
     }
 }
