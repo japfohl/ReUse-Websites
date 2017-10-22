@@ -7,7 +7,7 @@
  */
 
 // the XML representation of the ReUse database
-$XML_FILENAME =  __DIR__ ."/reuse_database.xml";
+define('XML_FILENAME',  __DIR__ ."/reuse_database.xml");
 
 /* Escape problem characters in XML ( '<', '>', '&', ''', '"' ) */
 function escapeSpecial($str) {
@@ -142,7 +142,7 @@ function reuse_generateXML() {
 	}
 	$stmt->close();
 
-	$sxml->asXML($XML_FILENAME);
+	$sxml->asXML(constant('XML_FILENAME'));
 	return true;
 }
 
@@ -153,17 +153,17 @@ function echoXMLFile() {
 
 
 	//create the file if it doesn't exist
-	if (file_exists($XML_FILENAME) == false) {
+	if (file_exists(constant('XML_FILENAME')) == false) {
 		reuse_generateXML();
 
-		if (file_exists($XML_FILENAME) == false) {
+		if (file_exists(constant('XML_FILENAME')) == false) {
 			// if the file still doesn't exist, there are problems
-			echo "$XML_FILENAME Does not Exist.  Check the configuration of XML Generator";
+			echo constant('XML_FILENAME') . "Does not Exist.  Check the configuration of XML Generator";
 		}
 	}
 
 
-	echo file_get_contents( $XML_FILENAME );
+	echo file_get_contents(constant('XML_FILENAME'));
 
 	return;
 }
