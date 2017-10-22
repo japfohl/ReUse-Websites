@@ -33,7 +33,31 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
 
     /************************************** TESTS ***************************************/
 
+    public function testAllTestLocationsSuccessfullyAdded() {
+        
+        // verify array of ID's is of length 4
+        $this->assertEquals(4, count($this->locIDs));
 
+        // print information for each inserted location
+        foreach ($this->locIDs as $id) {
+            $res = $this->db->query("SELECT * FROM Reuse_Locations WHERE id = $id;");
+            $this->assertNotFalse($res);
+        }
+    }
+
+    public function testLatLongsRouteUpdatesTestDataAndRegeneratesXmlDatabase() {
+        // TODO: verify that test data does not have latitude and longitude
+
+        // TODO: grab and store a copy of the XML DB
+
+        // TODO: Make the call to the route
+        
+        // TODO: Verify the test data now has latitude and longitude
+
+        // TODO: Get a new copy of the xml db
+
+        // TODO: Verify the new xml DB is different from the old XML DB
+    }
 
     /***************************** PRIVATE HELPER FUNCTIONS *****************************/
 
