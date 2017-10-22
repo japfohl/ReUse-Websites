@@ -12,10 +12,11 @@
 	* OUTPUT: Successful: Array: ['lat'] and ['long'] keys
 	*			Failed: Boolean value: false
 	*/
+
+	define('MY_XML_FILENAME', __dir__."/../../../public_html/xml/myxml.xml");
+	use GuzzleHttp\Client;
 	
 	function bingGeocode($street, $city, $state, $zip) {
-		/* Get the API key for bing maps. Stored in $bingApiKey as a string */
-		include ('bingApiKey.php');		//$bingApiKey
 
 		/* Where the API is located (no ending backslash) */
 		$BINGMAPS_API_PATH = "http://dev.virtualearth.net/REST/v1/Locations/US";
@@ -31,21 +32,21 @@
 		
 		/* construction or request URL */
 		$url = $BINGMAPS_API_PATH . '/' . $state_urlsafe . '/' . $zip_urlsafe . '/' . $city_urlsafe . '/'
-			. $street_urlsafe . '?' . 'o=' . $options . '&key=' . $bingApiKey;
+			. $street_urlsafe . '?' . 'o=' . $options . '&key=' . getenv('BING_API_KEY');
 		
-		
-		
-		/*Now the magic - Retreive the geocode for the address*/
-		$xml_string = get_data($url);
+		// send request to api using Guzzle http client
+		$guzzle = new Client();
+		$res = $guzzle->request('GET', $url);
+		$body = $res->getBody();
 		
 		//parse
-		$sxml = simplexml_load_string($xml_string);
+		$sxml = new SimpleXMLElement($body);
 
 		//get relevent data
 		$sxml->registerXPathNamespace("x", "http://schemas.microsoft.com/search/local/ws/rest/v1");
 		
 		//for debugging
-		$sxml->asxml('myxml.xml');
+		$sxml->asxml(constant('MY_XML_FILENAME'));
 		
 		$lat = $sxml->xpath('//x:Latitude');
 		$long = $sxml->xpath('//x:Longitude');
@@ -71,21 +72,6 @@
 			return $results;
 		}
 		
-		/*
-		if(isset($lat[0])) {
-			$results['lat'] = $lat[0];
-		}
-		else {
-			$results['lat'] = $lat;
-		}
-		
-		if(isset($long[0])) {
-			$results['long'] = $long[0];
-		}
-		else {
-			$results['long'] = $long;
-		}
-		*/
 		$results['lat'] = $lat[0];
 		$results['long'] = $long[0];
 		

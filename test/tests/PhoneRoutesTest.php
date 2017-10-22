@@ -5,32 +5,30 @@ require_once dirname(__FILE__).'/../../vendor/autoload.php';
 
 use PHPUnit\Framework\TestCase;
 
-final class PhoneRoutesTest extends TestCase
-{
+final class PhoneRoutesTest extends TestCase {
+
     // class level variables accessible by each test being run
     protected $client;
 
     // create a new Guzzle client before running each test
-    protected function setUp()
-    {
+    protected function setUp() {
+
         $this->client = new GuzzleHttp\Client(['base_uri' => getenv('API_ADDR')]);
     }
 
-    public function testWholeReuseDatabaseRoute()
-    {
+    public function testWholeReuseDatabaseRoute() {
+
         // send the request to the route and store the response
         $response = $this->client->request('GET', '/reuseDB');
 
         // initial basic validations
         $this->validateGoodRequest($response);
         $this->validateContentType($response);
-
-        $res = $this->reUseDbXmlIsValid($response);
-        $this->assertTrue($res['res'], $res['msg']);
+        $this->reUseDbXmlIsValid($response);
     }
 
-    public function testRecyclingCenterNamesOnlyListRoute()
-    {
+    public function testRecyclingCenterNamesOnlyListRoute() {
+
         // send the request to the route and store the response
         $response = $this->client->request('GET', '/recycleNameXML');
 
@@ -48,10 +46,10 @@ final class PhoneRoutesTest extends TestCase
         $recycleCenterNames = $xml->children()[0];
         $this->assertEquals('recycle_center_names', $recycleCenterNames->getName());
 
-        if ($recycleCenterNames->count() > 0)
-        {
-            foreach ($recycleCenterNames->children() as $name)
-            {
+        if ($recycleCenterNames->count() > 0) {
+
+            foreach ($recycleCenterNames->children() as $name) {
+
                 // validate tag name
                 $this->assertEquals('name', $name->getName());
 
@@ -61,8 +59,8 @@ final class PhoneRoutesTest extends TestCase
         }
     }
 
-    public function testRecyclingCenterListIncludingAllRelevantDataRoute()
-    {
+	public function testRecyclingCenterListIncludingAllRelevantDataRoute() {
+
         // send the request to the route and store the response
         $response = $this->client->request('GET', '/recycleXML');
 
@@ -86,8 +84,8 @@ final class PhoneRoutesTest extends TestCase
         $this->assertGreaterThanOrEqual(1, $recycleList->count());
 
         // loop over and validate each child of recycle list
-        foreach ($recycleList->children() as $business)
-        {
+        foreach ($recycleList->children() as $business) {
+
             // validate name and child count
             $this->assertEquals('business', $business->getName());
             $this->assertEquals(5, $business->count());
@@ -155,10 +153,9 @@ final class PhoneRoutesTest extends TestCase
             $this->assertEquals('link_list', $linkList->getName());
 
             // validate each link in link list
-            if ($linkList->count() > 0)
-            {
-                foreach ($linkList->children() as $link)
-                {
+            if ($linkList->count() > 0) {
+                foreach ($linkList->children() as $link) {
+
                     $this->assertEquals('link', $link->getName());
                     $this->assertEquals(2, $link->count());
                     $this->assertEquals('name', $link->children()[0]->getName());
@@ -170,8 +167,8 @@ final class PhoneRoutesTest extends TestCase
         }
     }
 
-    public function testDonorAndSponsorInformationListRoute()
-    {
+    public function testDonorAndSponsorInformationListRoute() {
+
         // send the request to the route and store the response
         $response = $this->client->request('GET', '/donorXML');
 
@@ -189,10 +186,9 @@ final class PhoneRoutesTest extends TestCase
         $donorList = $xml->children()[0];
         $this->assertEquals('donor_list', $donorList->getName());
 
-        if ($donorList->count() > 0)
-        {
-            foreach ($donorList->children(0) as $donor)
-            {
+        if ($donorList->count() > 0) {
+            foreach ($donorList->children(0) as $donor) {
+
                 // TODO: get donor spec and add validation code here
             }
         }
@@ -200,259 +196,168 @@ final class PhoneRoutesTest extends TestCase
 
     // HELPER FUNCTIONS
 
-    private function reUseDbXmlIsValid($res)
-    {
-        // TODO: Convert all of the simple logic tests to use PHPUnit assertions
+    private function reUseDbXmlIsValid($res) {
 
         // convert the response body to an XML element
         $xml = new SimpleXMLElement((string) $res->getBody());
 
-        // verify root name and child count
-        if ($xml->getName() != 'reuse')
-            return $this->_Fail("Invalid ReUse DB XML root name.");
+        $this->assertEquals('reuse', $xml->getName(),
+            "Invalid root tag value.  Expected \'reuse\' but got ". $xml->getName()
+        );
 
-        // varify child count
-        if ($xml->count() != 2)
-            return $this->_Fail("Incorrect number of children under 'reuse' root node.");
+        $this->assertEquals(2, $xml->count());
 
-        // verify the revision tag name
-        if ($xml->children()[0]->getName() != 'Revision')
-            return $this->_Fail("Invalid ReUse DB Revision tag name.");
+        $revision = $xml->xpath('./Revision');
+        $this->assertNotFalse($revision);
+        $this->assertEquals('Revision', $revision[0]->getName());
 
-        // get and the business list
-        $businessList = $xml->children()[1];
-
-        // verify tag name
-        if ($businessList->getName() != 'BusinessList')
-            return $this->_Fail("Invalid BusinessList tag name");
-
-        // verify tag count
-        if ($businessList->count() < 1)
-            return $this->_Fail("BusinessList has no children.");
+        // get the business list
+        $businessList = $xml->xpath('./BusinessList');
+        $this->assertNotFalse($businessList);
+        $businessList = $businessList[0];
+        $this->assertEquals('BusinessList', $businessList->getName());
+        $this->assertGreaterThanOrEqual(1, $businessList->count());
 
         // validate each business in the business list
-        foreach ($businessList->children() as $business)
-        {
-            // validate tag name
-            if ($business->getName() != 'business')
-                return $this->_Fail("Malformed 'business' tag name.");
+        foreach ($businessList->children() as $business) {
 
-            // verify child count
-            if ($business->count() != 5)
-                return $this->_Fail("Incorrect child count in 'reuse>BusinessList>business' tag");
+            // validate business
+            $this->assertEquals('business', $business->getName());
+            $this->assertEquals(5, $business->count());
 
-            // get id tag
-            $id = $business->children()[0];
+            // validate id
+            $id = $business->xpath('./id');
+            $this->assertNotFalse($id);
+            $id = $id[0];
+            $this->assertEquals('id', $id[0]->getName());
+            $this->assertEquals(0, $id[0]->count());
 
-            // verify tag name
-            if ($id->getName() != 'id')
-                return $this->_Fail("Malforned 'id' tag name.");
-
-            // verify child count
-            if ($id->count() != 0)
-                return $this->_Fail("id tag has children when it should have none");
-
-            // get name tag
-            $name = $business->children()[1];
-
-            // verify tag name
-            if ($name->getName() != 'name')
-                return $this->_Fail("Malformed 'name' tag name.");
-
-            // verify child count
-            if ($name->count() != 0)
-                return $this->_Fail("name tag has children when it should have none");
+            // validate name
+            $name = $business->xpath('./name');
+            $this->assertNotFalse($name);
+            $name = $name[0];
+            $this->assertEquals('name', $name[0]->getName());
+            $this->assertEquals(0, $name[0]->count());
 
             // get contact info tage
-            $contactInfo = $business->children()[2];
+            $contactInfo = $business->xpath('./contact_info');
+            $this->assertNotFalse($contactInfo);
+            $contactInfo = $contactInfo[0];
+            $this->assertEquals('contact_info', $contactInfo->getName());
+            $this->assertEquals(4, $contactInfo->count());
 
-            // verify tag name
-            if ($contactInfo->getName() != 'contact_info')
-                return $this->_Fail("Malformed 'contact_info' tag name.");
+            $phone = $contactInfo->xpath('./phone');
+            $this->assertNotFalse($phone);
+            $phone = $phone[0];
+            $this->assertEquals('phone', $phone->getName());
+            $this->assertEquals(0, $phone->count());
 
-            // verify child count
-            if ($contactInfo->count() != 4)
-                return $this->_Fail("contact_info has incorrect number of tags");
+            $website = $contactInfo->xpath('./website');
+            $this->assertNotFalse($website);
+            $website = $website[0];
+            $this->assertEquals('website', $website->getName());
+            $this->assertEquals(0, $website->count());
 
-            $i = 0; // loop index counter
-            // validate structure of contactInfo children
-            foreach ($contactInfo->children() as $info)
-            {
-                switch ($i)
-                {
-                    case 0:
-                        // validate tag name
-                        if ($info->getName() != 'address')
-                            return $this->_Fail("malformed name for tag address");
+            $address = $contactInfo->xpath('./address');
+            $this->assertNotFalse($address);
+            $address = $address[0];
+            $this->assertEquals('address', $address->getName());
+            $this->assertEquals(5, $address->count());
 
-                        // validate child count
-                        if ($info->count() != 5)
-                            return $this->_Fail("invalid number of children under 'address; tag");
+            $line1 = $address->xpath('./address_line_1');
+            $this->assertNotFalse($line1);
+            $line1 = $line1[0];
+            $this->assertEquals('address_line_1', $line1->getName());
+            $this->assertEquals(0, $line1->count());
 
-                        $j = 0; // array index counter
-                        // validate each line of the address
-                        foreach ($info->children() as $line)
-                        {
-                            switch($j)
-                            {
-                                case 0:
-                                    // validate tag name
-                                    if ($line->getName() != 'address_line_1')
-                                        return $this->_Fail("Malformed name for tag 'address_line_1'");
-                                    break;
-                                case 1:
-                                    // validate tag name
-                                    if ($line->getName() != 'address_line_2')
-                                        return $this->_Fail("Malformed name for tag 'address_line_2'");
-                                    break;
-                                case 2:
-                                    // validate tag name
-                                    if ($line->getName() != 'city')
-                                        return $this->_Fail("Malformed name for tag 'city'");
-                                    break;
-                                case 3:
-                                    // validate tag name
-                                    if ($line->getName() != 'state')
-                                        return $this->_Fail("Malformed name for tag 'state'");
-                                    break;
-                                case 4:
-                                    // validate tag name
-                                    if ($line->getName() != 'zip')
-                                        return $this->_Fail("Malformed name for tag 'zip'");
-                                    break;
-                            }
-                            // validate no more children
-                            if ($line->count() != 0)
-                                return $this->_Fail("address child has children when it should have none");
-                            $j++;
-                        }
-                        break;
-                    case 1:
-                        // validate tag name
-                        if ($info->getName() != 'phone')
-                            return $this->_Fail('malformed name for tag \'phone\'');
+            $line2 = $address->xpath('./address_line_2');
+            $this->assertNotFalse($line2);
+            $line2 = $line2[0];
+            $this->assertEquals('address_line_2', $line2->getName());
+            $this->assertEquals(0, $line2->count());
 
-                        // validate no more children
-                        if ($info->count() != 0)
-                            return $this->_Fail("'phone' tag has children when it should have none");
-                        break;
-                    case 2:
-                        // validate tag name
-                        if ($info->getName() != 'website')
-                            return $this->_Fail('malformed name for tag \'website\'');
+            $city = $address->xpath('./city');
+            $this->assertNotFalse($city);
+            $city = $city[0];
+            $this->assertEquals('city', $city->getName());
+            $this->assertEquals(0, $city->count());
 
-                        // validate no more children
-                        if ($info->count() != 0)
-                            return $this->_Fail("'website' tag has children when it should have none");
-                        break;
-                    case 3:
-                        // validate tag name
-                        if ($info->getName() != 'latlong')
-                            return $this->_Fail("malformed name for tag 'latlong'");
+            $state = $address->xpath('./state');
+            $this->assertNotFalse($state);
+            $state = $state[0];
+            $this->assertEquals('state', $state->getName());
+            $this->assertEquals(0, $state->count());
 
-                        // validate child count
-                        if ($info->count() != 2)
-                            return $this->_Fail("incorrect child count for tag 'latlong'");
+            $zip = $address->xpath('./zip');
+            $this->assertNotFalse($zip);
+            $zip = $zip[0];
+            $this->assertEquals('zip', $zip->getName());
+            $this->assertEquals(0, $zip->count());
 
-                        // validate latitude
-                        if ($info->children()[0]->getName() != 'latitude')
-                            return $this->_Fail("malformed name for tag 'latitude'");
+            $latlong = $contactInfo->xpath('./latlong');
+            $this->assertNotFalse($latlong);
+            $latlong = $latlong[0];
+            $this->assertEquals('latlong', $latlong->getName());
+            $this->assertEquals(2, $latlong->count());
 
-                        if ($info->children()[0]->count() != 0)
-                            return $this->_Fail("incorrect child count for tag 'latitude'");
+            $lat = $latlong->xpath('./latitude');
+            $this->assertNotFalse($lat);
+            $lat = $lat[0];
+            $this->assertEquals('latitude', $lat->getName());
+            $this->assertEquals(0, $lat->count());
 
-                        // validate longitude
-                        if ($info->children()[1]->getName() != 'longitude')
-                            return $this->_Fail("malformed name for tag 'longitude'");
+            $long = $latlong->xpath('./longitude');
+            $this->assertNotFalse($long);
+            $long = $long[0];
+            $this->assertEquals('longitude', $long->getName());
+            $this->assertEquals(0, $long->count());
 
-                        if ($info->children()[1]->count() != 0)
-                            return $this->_Fail("incorrect child count for tag 'longitude'");
-                        break;
-                }
-                $i++;
+            $catList = $business->xpath('./category_list');
+            $this->assertNotFalse($catList);
+            $catList = $catList[0];
+
+            foreach ($catList->children() as $category) {
+
+				$this->assertEquals('category', $category->getName());
+				$this->assertEquals(2, $category->count());
+
+				$catName = $category->xpath('./name');
+				$this->assertNotFalse($catName);
+				$catName = $catName[0];
+				$this->assertEquals('name', $catName->getName());
+				$this->assertEquals(0, $catName->count());
+
+				$subCatList = $category->xpath('./subcategory_list');
+				$this->assertNotFalse($subCatList);
+				$subCatList = $subCatList[0];
+				$this->assertEquals('subcategory_list', $subCatList->getName());
+
+				foreach ($subCatList->children() as $subcat) {
+
+					$this->assertEquals('subcategory', $subcat->getName());
+					$this->assertEquals(0, $subcat->count());
+				}
             }
 
-            $categoryList = $business->children()[3];
-            if ($categoryList->getName() != 'category_list')
-                return $this->_Fail("Malformed \'category_list\' tag name.");
+            $linkList = $business->xpath('./link_list');
+            $this->assertNotFalse($linkList);
+            $linkList = $linkList[0];
 
-            if ($categoryList->count() > 0)
-            {
-                // validate structure of categoryList children
-                foreach ($categoryList->children() as $category)
-                {
-                    // verify tag name
-                    if ($category->getName() != 'category')
-                        return $this->_Fail("malformed name for tag 'category'");
+            foreach ($linkList->children() as $link) {
 
-                    // verify child count
-                    if ($category->count() != 2)
-                        return $this->_Fail("tag 'category' has invalid number of children");
+				$linkName = $link->xpath('./name');
+				$this->assertNotFalse($linkName);
+				$linkName = $linkName[0];
+				$this->assertEquals('name', $linkName->getName());
+				$this->assertEquals(0, $linkName->count());
 
-                    // verify child tag names
-                    if ($category->children()[0]->getName() != 'name')
-                        return $this->_Fail("malformed name for tag 'name' (under caregory)");
-
-                    $subcategoryList = $category->children()[1];
-                    if ($subcategoryList->getName() != 'subcategory_list')
-                        return $this->_Fail("malformed name for tag 'category_list'");
-
-                    // validate subcategory_list has at least one child with name subcategory
-                    if ($subcategoryList->count() == 0)
-                        return $this->_Fail("subcategory_list has no children and should have >= 1");
-
-                    if ($subcategoryList->children()[0]->getName() != 'subcategory')
-                        return $this->_Fail('malforned name for tag "subcategory"');
-                }
-            }
-
-            $linkList = $business->children()[4];
-            if ($linkList->getName() != 'link_list')
-                return $this->_Fail("Malformed \'link_list\' tag name.");
-
-            if ($linkList->count() > 0)
-            {
-                // validate structure of linkList children
-                foreach ($linkList->children() as $link)
-                {
-                    // validate name
-                    if ($link->getName() != 'link')
-                        return $this->_Fail('malformed \'link\' tag name');
-
-                    // validate only 2 children
-                    if ($link->count() != 2)
-                        return $this->_Fail('link should only have 2 children');
-
-                    // validate name child
-                    if ($link->children()[0]->getName() != 'name')
-                        return $this->_Fail("malformed 'link_list>link>name' tag name");
-
-                    if ($link->children()[0]->count() != 0)
-                        return $this->_Fail("link name should have no children");
-
-                    // validate URI child
-                    if ($link->children()[1]->getName() != 'URI')
-                        return $this->_Fail("malformed name for tag 'URI'");
-
-                    if ($link->children()[1]->count() != 0)
-                        return $this->_Fail('URI should have 0 children');
-                }
+				$uri = $link->xpath('./URI');
+				$this->assertNotFalse($uri);
+				$uri = $uri[0];
+				$this->assertEquals('URI', $uri->getName());
+				$this->assertEquals(0, $uri->count());
             }
         }
-
-        // if the script gets to this point, everything has checked out so we can return true
-        return array(
-            "res" => true,
-            "msg" => 'XML structure is valid.'
-        );
-    }
-
-    private function _Fail($msg)
-    {
-        return array(
-            "res" => false,
-            "msg" => $msg
-        );
     }
 
     private function validateGoodRequest($response)

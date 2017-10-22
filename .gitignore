@@ -4,3 +4,4 @@ vendor/
 .idea/
 *.DS_Store*
 *.php_cs.cache
+App/Lib/BingGeocoder/bingApiKey.php
