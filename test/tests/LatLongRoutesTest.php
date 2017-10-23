@@ -100,15 +100,39 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
         $this->assertEquals(200, $res->getStatusCode());
         $this->assertEquals("OK", $res->getReasonPhrase());
         $this->assertEquals('application/xml', $res->getHeader('content-type')[0]);
-        $startReuseDb = new SimpleXMLElement((string) $res->getBody());
+        $startReuseDb = (string) $res->getBody();
 
-        // TODO: Make the call to the route
+        // Make the call to the route
+        $res = $this->client->request('GET', '/setLatLongs');
+        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertEquals("OK", $res->getReasonPhrase());
 
-        // TODO: Get a new copy of the xml db
+        // Get a new copy of the xml db
+        $res = $this->client->request('GET', '/reuseDB');
+        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertEquals("OK", $res->getReasonPhrase());
+        $this->assertEquals('application/xml', $res->getHeader('content-type')[0]);
+        $newReuseDb = (string) $res->getBody();
 
-        // TODO: Verify the new xml DB is different from the old XML DB
+        // Verify the new xml DB is different from the old XML DB
+        $this->assertXmlStringNotEqualsXmlString($startReuseDb, $newReuseDb);
 
-        // TODO: Verify the latitude and longitude of the test data matches the info in the xml db
+        // Verify that test data exists in the xml document and has a latitude and longitude
+        $reuseXML = new SimpleXMLElement($newReuseDb);
+        foreach ($this->locIDs as $id) {
+
+            // get the business matching the 
+            $location = $reuseXML->xpath("/reuse/BusinessList/business[id = $id]");
+            $this->assertNotFalse($location);
+            
+            // get the value of the latitude and longitude
+            $lat = $location[0]->xpath("contact_info/latlong/latitude");
+            $long = $location[0]->xpath("contact_info/latlong/latitude");
+
+            // make sure there are good latitude and longitude values stored
+            $this->assertStringMatchesFormat("%f", (string) $lat[0]);
+            $this->assertStringMatchesFormat("%f", (string) $long[0]);
+        }
     }
 
     /***************************** PRIVATE HELPER FUNCTIONS *****************************/
