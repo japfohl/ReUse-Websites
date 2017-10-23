@@ -24,9 +24,7 @@ final class PhoneRoutesTest extends TestCase
         // initial basic validations
         $this->validateGoodRequest($response);
         $this->validateContentType($response);
-
-        $res = $this->reUseDbXmlIsValid($response);
-        $this->assertTrue($res['res'], $res['msg']);
+        $this->reUseDbXmlIsValid($response);
     }
 
     public function testRecyclingCenterNamesOnlyListRoute()
@@ -202,249 +200,70 @@ final class PhoneRoutesTest extends TestCase
 
     private function reUseDbXmlIsValid($res)
     {
-        // TODO: Convert all of the simple logic tests to use PHPUnit assertions
-
         // convert the response body to an XML element
         $xml = new SimpleXMLElement((string) $res->getBody());
 
-        // verify root name and child count
-        if ($xml->getName() != 'reuse')
-            return $this->_Fail("Invalid ReUse DB XML root name.");
+        $this->assertEquals('reuse', $xml->getName(),
+            "Invalid root tag value.  Expected \'reuse\' but got ". $xml->getName()
+        );
 
-        // varify child count
-        if ($xml->count() != 2)
-            return $this->_Fail("Incorrect number of children under 'reuse' root node.");
+        $this->assertEquals(2, $xml->count());
+        
+        $revision = $xml->xpath('./Revision')[0];
+        $this->assertNotFalse($revision);
+        $this->assertEquals('Revision', $revision->getName());
 
-        // verify the revision tag name
-        if ($xml->children()[0]->getName() != 'Revision')
-            return $this->_Fail("Invalid ReUse DB Revision tag name.");
-
-        // get and the business list
-        $businessList = $xml->children()[1];
+        // get the business list
+        $businessList = $xml->xpath('./BusinessList')[0];
+        $this->assertNotFalse($businessList);
 
         // verify tag name
-        if ($businessList->getName() != 'BusinessList')
-            return $this->_Fail("Invalid BusinessList tag name");
+        $this->assertEquals('BusinessList', $businessList->getName());
 
         // verify tag count
-        if ($businessList->count() < 1)
-            return $this->_Fail("BusinessList has no children.");
-
-        // validate each business in the business list
+        $this->assertGreaterThanOrEqual(1, $businessList->count());
+        
+            // validate each business in the business list
         foreach ($businessList->children() as $business)
         {
             // validate tag name
-            if ($business->getName() != 'business')
-                return $this->_Fail("Malformed 'business' tag name.");
-
+            $this->assertEquals('business', $business->getName());
+            
             // verify child count
-            if ($business->count() != 5)
-                return $this->_Fail("Incorrect child count in 'reuse>BusinessList>business' tag");
-
+            $this->assertEquals(5, $business->count());
+            
             // get id tag
-            $id = $business->children()[0];
+            $id = $business->xpath('./id')[0];
+            $this->assertNotFalse($id);
 
             // verify tag name
-            if ($id->getName() != 'id')
-                return $this->_Fail("Malforned 'id' tag name.");
-
+            $this->assertEquals('id', $id->getName());
+            
             // verify child count
-            if ($id->count() != 0)
-                return $this->_Fail("id tag has children when it should have none");
+            $this->assertEquals(0, $id->count());
 
             // get name tag
-            $name = $business->children()[1];
+            $name = $business->xpath('./name')[0];
+            $this->assertNotFalse($name);
 
             // verify tag name
-            if ($name->getName() != 'name')
-                return $this->_Fail("Malformed 'name' tag name.");
+            $this->assertEquals('name', $name->getName());
 
             // verify child count
-            if ($name->count() != 0)
-                return $this->_Fail("name tag has children when it should have none");
+            $this->assertEquals(0, $name->count());
 
             // get contact info tage
-            $contactInfo = $business->children()[2];
+            $contactInfo = $business->xpath('contact_info')[0];
+            $this->assertNotFalse($contactInfo);
+            $this->assertEquals('contact_info', $contactInfo->getName());
+            $this->assertEquals(4, $contactInfo->count());
 
-            // verify tag name
-            if ($contactInfo->getName() != 'contact_info')
-                return $this->_Fail("Malformed 'contact_info' tag name.");
+            // TODO: validate <contact_info> tag structure using xpath
 
-            // verify child count
-            if ($contactInfo->count() != 4)
-                return $this->_Fail("contact_info has incorrect number of tags");
+            // TODO: validate <category_list> tag structure using xpath
 
-            $i = 0; // loop index counter
-            // validate structure of contactInfo children
-            foreach ($contactInfo->children() as $info)
-            {
-                switch ($i)
-                {
-                    case 0:
-                        // validate tag name
-                        if ($info->getName() != 'address')
-                            return $this->_Fail("malformed name for tag address");
-
-                        // validate child count
-                        if ($info->count() != 5)
-                            return $this->_Fail("invalid number of children under 'address; tag");
-
-                        $j = 0; // array index counter
-                        // validate each line of the address
-                        foreach ($info->children() as $line)
-                        {
-                            switch($j)
-                            {
-                                case 0:
-                                    // validate tag name
-                                    if ($line->getName() != 'address_line_1')
-                                        return $this->_Fail("Malformed name for tag 'address_line_1'");
-                                    break;
-                                case 1:
-                                    // validate tag name
-                                    if ($line->getName() != 'address_line_2')
-                                        return $this->_Fail("Malformed name for tag 'address_line_2'");
-                                    break;
-                                case 2:
-                                    // validate tag name
-                                    if ($line->getName() != 'city')
-                                        return $this->_Fail("Malformed name for tag 'city'");
-                                    break;
-                                case 3:
-                                    // validate tag name
-                                    if ($line->getName() != 'state')
-                                        return $this->_Fail("Malformed name for tag 'state'");
-                                    break;
-                                case 4:
-                                    // validate tag name
-                                    if ($line->getName() != 'zip')
-                                        return $this->_Fail("Malformed name for tag 'zip'");
-                                    break;
-                            }
-                            // validate no more children
-                            if ($line->count() != 0)
-                                return $this->_Fail("address child has children when it should have none");
-                            $j++;
-                        }
-                        break;
-                    case 1:
-                        // validate tag name
-                        if ($info->getName() != 'phone')
-                            return $this->_Fail('malformed name for tag \'phone\'');
-
-                        // validate no more children
-                        if ($info->count() != 0)
-                            return $this->_Fail("'phone' tag has children when it should have none");
-                        break;
-                    case 2:
-                        // validate tag name
-                        if ($info->getName() != 'website')
-                            return $this->_Fail('malformed name for tag \'website\'');
-
-                        // validate no more children
-                        if ($info->count() != 0)
-                            return $this->_Fail("'website' tag has children when it should have none");
-                        break;
-                    case 3:
-                        // validate tag name
-                        if ($info->getName() != 'latlong')
-                            return $this->_Fail("malformed name for tag 'latlong'");
-
-                        // validate child count
-                        if ($info->count() != 2)
-                            return $this->_Fail("incorrect child count for tag 'latlong'");
-
-                        // validate latitude
-                        if ($info->children()[0]->getName() != 'latitude')
-                            return $this->_Fail("malformed name for tag 'latitude'");
-
-                        if ($info->children()[0]->count() != 0)
-                            return $this->_Fail("incorrect child count for tag 'latitude'");
-
-                        // validate longitude
-                        if ($info->children()[1]->getName() != 'longitude')
-                            return $this->_Fail("malformed name for tag 'longitude'");
-
-                        if ($info->children()[1]->count() != 0)
-                            return $this->_Fail("incorrect child count for tag 'longitude'");
-                        break;
-                }
-                $i++;
-            }
-
-            $categoryList = $business->children()[3];
-            if ($categoryList->getName() != 'category_list')
-                return $this->_Fail("Malformed \'category_list\' tag name.");
-
-            if ($categoryList->count() > 0)
-            {
-                // validate structure of categoryList children
-                foreach ($categoryList->children() as $category)
-                {
-                    // verify tag name
-                    if ($category->getName() != 'category')
-                        return $this->_Fail("malformed name for tag 'category'");
-
-                    // verify child count
-                    if ($category->count() != 2)
-                        return $this->_Fail("tag 'category' has invalid number of children");
-
-                    // verify child tag names
-                    if ($category->children()[0]->getName() != 'name')
-                        return $this->_Fail("malformed name for tag 'name' (under caregory)");
-
-                    $subcategoryList = $category->children()[1];
-                    if ($subcategoryList->getName() != 'subcategory_list')
-                        return $this->_Fail("malformed name for tag 'category_list'");
-
-                    // validate subcategory_list has at least one child with name subcategory
-                    if ($subcategoryList->count() == 0)
-                        return $this->_Fail("subcategory_list has no children and should have >= 1");
-
-                    if ($subcategoryList->children()[0]->getName() != 'subcategory')
-                        return $this->_Fail('malforned name for tag "subcategory"');
-                }
-            }
-
-            $linkList = $business->children()[4];
-            if ($linkList->getName() != 'link_list')
-                return $this->_Fail("Malformed \'link_list\' tag name.");
-
-            if ($linkList->count() > 0)
-            {
-                // validate structure of linkList children
-                foreach ($linkList->children() as $link)
-                {
-                    // validate name
-                    if ($link->getName() != 'link')
-                        return $this->_Fail('malformed \'link\' tag name');
-
-                    // validate only 2 children
-                    if ($link->count() != 2)
-                        return $this->_Fail('link should only have 2 children');
-
-                    // validate name child
-                    if ($link->children()[0]->getName() != 'name')
-                        return $this->_Fail("malformed 'link_list>link>name' tag name");
-
-                    if ($link->children()[0]->count() != 0)
-                        return $this->_Fail("link name should have no children");
-
-                    // validate URI child
-                    if ($link->children()[1]->getName() != 'URI')
-                        return $this->_Fail("malformed name for tag 'URI'");
-
-                    if ($link->children()[1]->count() != 0)
-                        return $this->_Fail('URI should have 0 children');
-                }
-            }
+            // TODO: validate <link_list> tag structure using xpath
         }
-
-        // if the script gets to this point, everything has checked out so we can return true
-        return array(
-            "res" => true,
-            "msg" => 'XML structure is valid.'
-        );
     }
 
     private function _Fail($msg)
