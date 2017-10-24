@@ -16,8 +16,6 @@
 	define('MY_XML_FILENAME', __dir__."/../../../public_html/xml/myxml.xml");
 	
 	function bingGeocode($street, $city, $state, $zip) {
-		/* Get the API key for bing maps. Stored in $bingApiKey as a string */
-		include ('bingApiKey.php');		//$bingApiKey
 
 		/* Where the API is located (no ending backslash) */
 		$BINGMAPS_API_PATH = "http://dev.virtualearth.net/REST/v1/Locations/US";
@@ -33,7 +31,7 @@
 		
 		/* construction or request URL */
 		$url = $BINGMAPS_API_PATH . '/' . $state_urlsafe . '/' . $zip_urlsafe . '/' . $city_urlsafe . '/'
-			. $street_urlsafe . '?' . 'o=' . $options . '&key=' . $bingApiKey;
+			. $street_urlsafe . '?' . 'o=' . $options . '&key=' . getenv('BING_API_KEY');
 		
 		
 		
