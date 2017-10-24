@@ -39,7 +39,7 @@
 		$xml_string = get_data($url);
 		
 		//parse
-		$sxml = simplexml_load_string($xml_string);
+		$sxml = new SimpleXMLElement($xml_string);
 
 		//get relevent data
 		$sxml->registerXPathNamespace("x", "http://schemas.microsoft.com/search/local/ws/rest/v1");
