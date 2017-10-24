@@ -3,8 +3,8 @@
 	<head>
 		<meta charset = "utf-8">
 		<!-- Google-hosted Jquery -->
-		<script src="../js/jquery-1.11.1.min.js"></script>
-		<script src="../js/headerFunct.js" type="text/javascript"></script>
+		<script src="js/jquery-1.11.1.min.js"></script>
+		<script src="js/headerFunct.js" type="text/javascript"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
 	<body>
@@ -31,7 +31,7 @@
 					</li>
 					<li role="presentation" class="header-button"><a href="about.php" class="header-link">About</a></li>
 					<li role="presentation" class="header-button"><a href="contact.php" class="header-link">Contact</a></li>
-					<li role="presentation" class="header-button"><a href="../admin2/loginPage.php" class="header-link">Admin</a></li>
+					<li role="presentation" class="header-button"><a href="admin/loginPage.php" class="header-link">Admin</a></li>
 					<!-- Add button to link to Corvallis Sustainability Coalition site -->
 					<li role="presentation" class="header-button"><a href="http://sustainablecorvallis.org/" target="_blank" class="header-link"><img id="header-icon" src="../img/CSCRectangular.png"></a></li>
 				</ul>
