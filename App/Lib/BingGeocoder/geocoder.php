@@ -12,6 +12,8 @@
 	* OUTPUT: Successful: Array: ['lat'] and ['long'] keys
 	*			Failed: Boolean value: false
 	*/
+
+	define('MY_XML_FILENAME', __dir__."/../../../public_html/xml/myxml.xml");
 	
 	function bingGeocode($street, $city, $state, $zip) {
 		/* Get the API key for bing maps. Stored in $bingApiKey as a string */
@@ -45,7 +47,7 @@
 		$sxml->registerXPathNamespace("x", "http://schemas.microsoft.com/search/local/ws/rest/v1");
 		
 		//for debugging
-		$sxml->asxml('myxml.xml');
+		$sxml->asxml(constant('MY_XML_FILENAME'));
 		
 		$lat = $sxml->xpath('//x:Latitude');
 		$long = $sxml->xpath('//x:Longitude');
@@ -71,21 +73,6 @@
 			return $results;
 		}
 		
-		/*
-		if(isset($lat[0])) {
-			$results['lat'] = $lat[0];
-		}
-		else {
-			$results['lat'] = $lat;
-		}
-		
-		if(isset($long[0])) {
-			$results['long'] = $long[0];
-		}
-		else {
-			$results['long'] = $long;
-		}
-		*/
 		$results['lat'] = $lat[0];
 		$results['long'] = $long[0];
 		
