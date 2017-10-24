@@ -12,23 +12,20 @@
 	***************************************************************************/
 
 	// create the Slim app
-	$app = new Slim(
-		//More debugging
-		array( 'debug' => true )
-    );
+	$app = new Slim(array(
+		'debug' => true,				// TODO: Turn this off in production
+		'view' => new ViewRenderer()
+	));
 
 	// Include all the route files
-    foreach (glob('../App/Api/*.php') as $routeFile) {
-            require $routeFile;
+    foreach (glob('../src/routes/*.php') as $routeFile) {
+    	require $routeFile;
     }
-
-    // TODO: should we actually be setting the content here?
-    $app->response->headers->set('Content-Type', 'application/json');
 
 	// test route
     $app->get('/hello/:name', function ($name) {
     	echo "Hello, $name";
     });
-	
+
 	// run
-	$app->run();	
+	$app->run();
