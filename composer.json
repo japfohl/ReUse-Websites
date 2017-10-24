@@ -9,9 +9,9 @@
    },
    "autoload": {
        "files": [
-        "App/Database/reuseConnect.php",
-        "App/Lib/BingGeocoder/geocoder.php",
-        "App/Lib/xmlGenerator/xmlGenerator.php"
+         "src/lib/geocoder.php",
+         "src/lib/reuseConnect.php",
+         "src/lib/xmlGenerator.php"
        ]
    },
    "autoload-dev": {

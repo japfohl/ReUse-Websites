@@ -47,8 +47,7 @@
 			}
 			
 		}
-		$mysqli->close();
-		
+
 		//generating new db XML document
 		reuse_generateXML();
 	});

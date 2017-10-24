@@ -13,7 +13,7 @@
 	*			Failed: Boolean value: false
 	*/
 
-	define('MY_XML_FILENAME', __dir__."/../../../public_html/xml/myxml.xml");
+	define('MY_XML_FILENAME', __dir__ . "/../../public_html/xml/myxml.xml");
 	use GuzzleHttp\Client;
 	
 	function bingGeocode($street, $city, $state, $zip) {

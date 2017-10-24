@@ -9,7 +9,6 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
 
     // class level variables accessible by each test being run
     protected $client;  // guzzle client
-    protected $db;      // mysqli client
     protected $locIDs;  // array of ids for test data added
 
     /********************************* SETUP & TEARDOWN *********************************/
@@ -18,7 +17,6 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
     protected function setUp() {
 
         $this->client = new Client(['base_uri' => getenv('API_ADDR')]);
-        $this->db = connectReuseDB();
         $this->locIDs = $this->insertTestLocations();
         reuse_generateXML();
     }
@@ -29,7 +27,6 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
         $this->client = null;
         $this->deleteTestLocations();
         $this->locIDs = null;
-        $this->db->close();
         reuse_generateXML();
     }
 
@@ -37,12 +34,15 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
 
     public function testAllTestLocationsSuccessfullyAdded() {
 
+    	// get the db connection
+		$db = connectReuseDB();
+
         // verify array of ID's is of length 4
         $this->assertEquals(4, count($this->locIDs));
 
         // verify selecting from the DB using the stored ids results in a non-false result
         foreach ($this->locIDs as $id) {
-            $res = $this->db->query(
+            $res = $db->query(
                 "SELECT *
                  FROM Reuse_Locations
                  WHERE id = $id;"
@@ -53,11 +53,14 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
 
     public function testLatLongsRouteAddsLatitudeAndLongitudeToTestData() {
 
+    	// get the db
+		$db = connectReuseDB();
+
         // verify that test data does not have latitude and longitude
         foreach ($this->locIDs as $id) {
 
             // get the latitude and longitude
-            $res = $this->db->query(
+            $res = $db->query(
                 "SELECT latitude, longitude
                  FROM Reuse_Locations
                  WHERE id = $id;"
@@ -78,7 +81,7 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
         foreach ($this->locIDs as $id) {
 
             // get the latitude and longitude
-            $res = $this->db->query(
+            $res = $db->query(
                 "SELECT latitude, longitude
                  FROM Reuse_Locations
                  WHERE id = $id;"
@@ -139,13 +142,19 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
 
     private function deleteTestLocations() {
 
+    	// get the db
+		$db = connectReuseDB();
+
         foreach ($this->locIDs as $id) {
-            $this->db->query("DELETE FROM Reuse_Locations WHERE id = $id;");
+            $db->query("DELETE FROM Reuse_Locations WHERE id = $id;");
         }
     }
 
     // create four test locations with valid addresses
     private function insertTestLocations() {
+
+    	// get the database connection
+		$db = connectReuseDB();
 
         $tempIds = array();
 
@@ -161,8 +170,8 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
         ];
 
         foreach ($queries as $query) {
-            $this->db->query($query);
-            $tempIds[] = $this->db->insert_id;
+            $db->query($query);
+            $tempIds[] = $db->insert_id;
         }
 
         return $tempIds;

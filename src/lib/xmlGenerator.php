@@ -7,7 +7,7 @@
  */
 
 // the XML representation of the ReUse database
-define('XML_FILENAME',  __DIR__ ."/../../../public_html/xml/reuse_database.xml");
+define('XML_FILENAME',  __DIR__ . "/../../public_html/xml/reuse_database.xml");
 
 /* Escape problem characters in XML ( '<', '>', '&', ''', '"' ) */
 function escapeSpecial($str) {
@@ -24,7 +24,7 @@ function reuse_generateXML() {
 	$sxml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ?><reuse/>');
 
 	/* Revision */
-	$revision = $sxml->addChild("Revision", uniqid());
+	$sxml->addChild("Revision", uniqid());
 
 	/* Business List*/
 	$businessList = $sxml->addChild("BusinessList");

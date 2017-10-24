@@ -18,7 +18,7 @@
     );
 
 	// Include all the route files
-    foreach (glob('../App/Api/*.php') as $routeFile) {
+    foreach (glob('../src/routes/*.php') as $routeFile) {
             require $routeFile;
     }
 
