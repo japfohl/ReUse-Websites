@@ -8,23 +8,23 @@
 		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<link rel="icon" href="../img/CSCLogo.png">
+		<link rel="icon" href="img/CSCLogo.png">
 		<title>The Corvallis Reuse and Repair Directory</title>
 
 		<!-- Bootstrap core CSS -->
-		<link href="../css/bootstrap.css" rel="stylesheet">
+		<link href="css/bootstrap.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
-		<link href="../css/jumbotron-narrow.css" rel="stylesheet">
+		<link href="css/jumbotron-narrow.css" rel="stylesheet">
 		<!-- Generic Reuse public site styling css -->
-		<link href="../css/publicSite.css" rel="stylesheet">
+		<link href="css/publicSite.css" rel="stylesheet">
 		<!-- Generic map styling css -->
-		<link href="../css/map.css" rel="stylesheet">
+		<link href="css/map.css" rel="stylesheet">
 	</head>
 
     <body>
 		<div class="container">
 			<?php
-				include 'header.php';
+				include 'components/header.php';
 			?>
 			
 			<div class="home-map-container">
@@ -57,17 +57,17 @@
 			</div>
 			
 			<?php 
-				include 'footer.php';
+				include 'components/footer.php';
 			?>
 		</div> <!-- /container -->
 		<!-- Map JS -->
-		<script src="../js/mapFunct.js" type="text/javascript" />
+		<script src="js/mapFunct.js" type="text/javascript" />
 		<script></script>
 		<script async defer
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiF8JALjnfAymACLHqPAhlrLlUj3y9DTo&callback=initGeneralMap">
 		</script>
 		<!-- Donor JS -->
-		<script src="../js/sponsorsFunct.js" type="text/javascript"></script>
+		<script src="js/sponsorsFunct.js" type="text/javascript"></script>
 		<script>
 			addShortSponsorsThanks();
 		</script>

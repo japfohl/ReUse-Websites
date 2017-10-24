@@ -7,6 +7,6 @@ class ViewRenderer extends View {
 
 	// only required function for the view object
 	public function render($template) {
-		include($template);
+		include(__dir__ . "/../../templates/$template");
 	}
 }

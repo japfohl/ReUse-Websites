@@ -36,7 +36,7 @@
 					<li role="presentation" class="header-button"><a href="http://sustainablecorvallis.org/" target="_blank" class="header-link"><img id="header-icon" src="../img/CSCRectangular.png"></a></li>
 				</ul>
 				<a href ="/">
-					<img align="left" id="header-icon" src="../img/CSCLogo.png">
+					<img align="left" id="header-icon" src="img/CSCLogo.png">
 					<h3 class="text-muted" id="header-title">Corvallis-Area ReUse and Repair Directory</h3>
 				</a>
 			</nav>

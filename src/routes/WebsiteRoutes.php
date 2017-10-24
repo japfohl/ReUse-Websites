@@ -8,7 +8,7 @@
 	 */
 	$app->get('/', function() use ($app) {
 		$app->response->headers->set('Content-Type', 'text/html');
-		$app->render("home/index.php");
+		$app->render("index.php");
 	});
 
 	//replacing a single single-quote with two single-quotes in a given string
