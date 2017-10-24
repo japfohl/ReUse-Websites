@@ -1,22 +1,22 @@
 {
    "require": {
-       "slim/slim": "2.6.3"
+     "guzzlehttp/guzzle": "~6.0",
+     "slim/slim": "2.6.3"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "~6.0",
-        "phpunit/phpunit": "^5.7",
-        "fzaninotto/faker": "^1.7"
+      "phpunit/phpunit": "^5.7",
+      "fzaninotto/faker": "^1.7"
    },
    "autoload": {
-       "files": [
-         "src/lib/geocoder.php",
-         "src/lib/reuseConnect.php",
-         "src/lib/xmlGenerator.php"
-       ]
+     "files": [
+       "src/lib/geocoder.php",
+       "src/lib/reuseConnect.php",
+       "src/lib/xmlGenerator.php"
+     ]
    },
    "autoload-dev": {
-       "classmap": [
-           
-       ]
+     "classmap": [
+       "src/lib/ViewRenderer.php"
+     ]
    }
 }

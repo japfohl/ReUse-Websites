@@ -12,14 +12,14 @@
 	***************************************************************************/
 
 	// create the Slim app
-	$app = new Slim(
-		//More debugging
-		array( 'debug' => true )
-    );
+	$app = new Slim(array(
+		'debug' => true,				// TODO: Turn this off in production
+		'view' => new ViewRenderer()
+	));
 
 	// Include all the route files
     foreach (glob('../src/routes/*.php') as $routeFile) {
-            require $routeFile;
+    	require $routeFile;
     }
 
     // TODO: should we actually be setting the content here?
@@ -29,6 +29,6 @@
     $app->get('/hello/:name', function ($name) {
     	echo "Hello, $name";
     });
-	
+
 	// run
-	$app->run();	
+	$app->run();
