@@ -99,7 +99,7 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
         $res = $this->client->request('GET', '/reuseDB');
         $this->assertEquals(200, $res->getStatusCode());
         $this->assertEquals("OK", $res->getReasonPhrase());
-        $this->assertEquals('application/xml', $res->getHeader('content-type')[0]);
+        $this->validateContentType($res);
         $startReuseDb = (string) $res->getBody();
 
         // Make the call to the route
@@ -111,7 +111,7 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
         $res = $this->client->request('GET', '/reuseDB');
         $this->assertEquals(200, $res->getStatusCode());
         $this->assertEquals("OK", $res->getReasonPhrase());
-        $this->assertEquals('application/xml', $res->getHeader('content-type')[0]);
+        $this->validateContentType($res);
         $newReuseDb = (string) $res->getBody();
 
         // Verify the new xml DB is different from the old XML DB
@@ -166,5 +166,18 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
         }
 
         return $tempIds;
+    }
+
+    private function validateContentType($response) {
+
+        // should have content-type header
+        $this->assertTrue($response->hasHeader('content-type'));
+
+        $addr = getenv('API_ADDR');
+        if (strpos($addr, 'localhost') !== false || strpos($addr, '127.0.0.1') !== false) {
+            $this->assertEquals('text/xml;charset=UTF-8', $response->getHeader('content-type')[0]);
+        } else {
+            $this->assertEquals('application/xml', $response->getHeader('content-type')[0]);
+        }
     }
 }
