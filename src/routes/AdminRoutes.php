@@ -7,7 +7,7 @@
    *
  */
 $app->get('/admin', function() use ($app) {
-  $app->redirect("/AdminSite2/loginPage.php");
+  $app->redirect("/admin2/loginPage.php");
 });
 
 $app->response->headers->set('Content-Type', 'application/json');

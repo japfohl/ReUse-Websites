@@ -4,10 +4,10 @@
   	 * @api {get} /
      * @apiName ReUseWebsite
      *
-	 * @apiSuccess {Webpage} /HomeSite/home.php The home page of the Reuse and Repair Directory
+	 * @apiSuccess {Webpage} /home/index.php The home page of the Reuse and Repair Directory
 	 */
 	$app->get('/', function() use ($app) {
-		$app->redirect("/HomeSite/home.php");
+		$app->redirect("/home/index.php");
 	});
 
 	//replacing a single single-quote with two single-quotes in a given string

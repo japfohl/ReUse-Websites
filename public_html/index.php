@@ -14,6 +14,7 @@
 	// create the Slim app
 	$app = new Slim(array(
 		'debug' => true,				// TODO: Turn this off in production
+		'templates.path' => __dir__ . '/../templates',
 		'view' => new ViewRenderer()
 	));
 
