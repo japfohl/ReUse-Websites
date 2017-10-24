@@ -14,6 +14,7 @@
 	*/
 
 	define('MY_XML_FILENAME', __dir__."/../../../public_html/xml/myxml.xml");
+	use GuzzleHttp\Client;
 	
 	function bingGeocode($street, $city, $state, $zip) {
 
@@ -33,13 +34,13 @@
 		$url = $BINGMAPS_API_PATH . '/' . $state_urlsafe . '/' . $zip_urlsafe . '/' . $city_urlsafe . '/'
 			. $street_urlsafe . '?' . 'o=' . $options . '&key=' . getenv('BING_API_KEY');
 		
-		
-		
-		/*Now the magic - Retreive the geocode for the address*/
-		$xml_string = get_data($url);
+		// send request to api using Guzzle http client
+		$guzzle = new Client();
+		$res = $guzzle->request('GET', $url);
+		$body = $res->getBody();
 		
 		//parse
-		$sxml = new SimpleXMLElement($xml_string);
+		$sxml = new SimpleXMLElement($body);
 
 		//get relevent data
 		$sxml->registerXPathNamespace("x", "http://schemas.microsoft.com/search/local/ws/rest/v1");
