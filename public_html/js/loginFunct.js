@@ -40,7 +40,7 @@ function login(){
         /* add user to DB */
         if(req.responseText == 1){
         /* everything has passed! Session begin */
-        window.location.href = webURL + "/AdminSite/main.php";
+        window.location.href = webURL + "/admin/main.php";
         }
 
         /* false, errors. Notify  user, no addition to DB */
@@ -62,7 +62,7 @@ function login(){
     }
 
     /* send to loginCheck.php for the session and db connection-- Calls function login() */
-    req.open("POST","/AdminSite/loginCheck.php", true);
+    req.open("POST","/admin/loginCheck.php", true);
     req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     var loginData ="type="+type+"&username="+user+"&password="+password;
     req.send(loginData);
@@ -77,12 +77,12 @@ purpose: Kill session
 function killSession(){
     var tableData = "killSession";
     $.ajax({type:"POST",
-      url: webURL + "/AdminSite/loginCheck.php",
+      url: webURL + "/admin/loginCheck.php",
       data: tableData,
       success: function(data){
         console.log("Success");
       },
     });
   window.alert('Session already in progress. Logging out old user.')
-  window.location.href = webURL + "/AdminSite/loginPage.php";
+  window.location.href = webURL + "/admin/loginPage.php";
 }
