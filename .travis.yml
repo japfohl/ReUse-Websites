@@ -16,6 +16,7 @@ before_script:
   - export REUSE_DB_URL=127.0.0.1
   - export REUSE_DB_NAME=reuse_db
   - export API_ADDR=127.0.0.1:8001
+  - chmod -R 777 public_html/xml
   - (cd public_html; php -S 127.0.0.1:8001 &)
   - sleep 10
 
