@@ -6,7 +6,7 @@ use \Slim\View;
 class ViewRenderer extends View {
 
 	// only required function for the view object
-	public function render($template) {
+	public function render($template, $data = null) {
 		include(__dir__ . "/../../templates/$template");
 	}
 }
