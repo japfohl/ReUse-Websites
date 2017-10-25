@@ -7,8 +7,7 @@
 	 * @apiSuccess {Webpage} /home/index.php The home page of the Reuse and Repair Directory
 	 */
 	$app->get('/', function() use ($app) {
-		$app->response->headers->set('Content-Type', 'text/html');
-		$app->render("index.php");
+		$app->redirect('/home/index.php');
 	});
 
 	//replacing a single single-quote with two single-quotes in a given string

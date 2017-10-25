@@ -16,7 +16,7 @@
    },
    "autoload-dev": {
      "classmap": [
-       "src/lib/ViewRenderer.php"
+       "src/view/ViewRenderer.php"
      ]
    }
 }

@@ -22,9 +22,6 @@
     	require $routeFile;
     }
 
-    // TODO: should we actually be setting the content here?
-    $app->response->headers->set('Content-Type', 'application/json');
-
 	// test route
     $app->get('/hello/:name', function ($name) {
     	echo "Hello, $name";
