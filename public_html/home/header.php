@@ -35,7 +35,7 @@
 					<!-- Add button to link to Corvallis Sustainability Coalition site -->
 					<li role="presentation" class="header-button"><a href="http://sustainablecorvallis.org/" target="_blank" class="header-link"><img id="header-icon" src="../img/CSCRectangular.png"></a></li>
 				</ul>
-				<a href ="/">
+				<a href ="/home/index.php">
 					<img align="left" id="header-icon" src="../img/CSCLogo.png">
 					<h3 class="text-muted" id="header-title">Corvallis-Area ReUse and Repair Directory</h3>
 				</a>

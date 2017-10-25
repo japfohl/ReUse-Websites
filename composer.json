@@ -12,9 +12,7 @@
        "src/lib/geocoder.php",
        "src/lib/reuseConnect.php",
        "src/lib/xmlGenerator.php"
-     ]
-   },
-   "autoload-dev": {
+     ],
      "classmap": [
        "src/view/ViewRenderer.php"
      ]

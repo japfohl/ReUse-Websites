@@ -7,6 +7,16 @@ class ViewRenderer extends View {
 
 	// only required function for the view object
 	public function render($template, $data = null) {
-		include(__dir__ . "/../../templates/$template");
+		if ($this->exists($template)) {
+			$this->getTemplate($template);
+		}
+	}
+
+	private function exists($template) {
+		return file_exists(__DIR__ . "/../../templates/$template");
+	}
+
+	private function getTemplate($template) {
+		require(__DIR__ . "/../../templates/$template");
 	}
 }
