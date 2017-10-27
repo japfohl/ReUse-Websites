@@ -1,6 +1,6 @@
 # TESTING
 
-**_NOTE: If you're doing development in a Cloud9 workspace, you can ignore the "Install Test Dependencies" section and skip ahead to "Test your setup"._**
+**_NOTE_**: _If you're doing development in a Cloud9 workspace, you can ignore the "Install Test Dependencies" section and skip ahead to "Test your setup"._
 
 ## Install Test Dependencies
 
@@ -10,18 +10,24 @@ _Note: The following instructions assume a *nix based system of some sort.  If y
 
 ### 1) Composer
 
-* To install a local copy of the [Composer](https://getcomposer.org) phar (_PHP Archive_), `cd` into the `/test` directory and enter:
+* To install a local copy of the [Composer](https://getcomposer.org) phar (_PHP Archive_), enter:
 
 ```bash
-test $ curl -sS https://getcomposer.org/installer | php
+$ curl -sS https://getcomposer.org/installer | php
 ```
 
 ### 2) PHPUnit & Guzzle
 
-* Now we'll use our freshly downloaded `composer.phar` to install [PHPUnit](https://phpunit.de) and [Guzzle](http://docs.guzzlephp.org/en/stable/):
+* Now we'll use our freshly downloaded `composer.phar` to install all project dependencies (_including those used in development_):
 
 ```bash
-test $ php composer.phar install
+$ php composer.phar install
+```
+
+* If you're building for production:
+
+```bash
+$ php composer.phar --no-dev install
 ```
 
 * If you're following these instructions on a version of **Linux** and the above command generates errors for you, you're probably missing a few basic PHP libraries that can be installed using you system's default package manager.  The following shows how to install on any Debian based Linux distributions:
@@ -76,10 +82,10 @@ $ mysql_config_editor set --login-path=local --host=localhost --user=username --
 
 ## Test your setup
 
-* Now that all the dependencies are installed and your brand new MySql server is running, you should be able to run the example test. Make sure you're in the `/test` directory and do the following:
+* Now that all the dependencies are installed and your brand new MySql server is running, you should be able to run the unit tests.  Make sure you're in the project root and do the following:
 
 ```bash
-test $ ./runtests.sh
+$ ./bin/runtests.sh
 ```
 
 * If everything went according to plan, you should see something like the following:
@@ -87,21 +93,21 @@ test $ ./runtests.sh
 ```
 Checking for valid PHP installation...   OK
 Checking if MySQL server is running...   OK
-Starting the PHP dev server...           OK
-Constructing the test DB...              OK
+Starting the server...                   OK
+
 BEGIN TESTS-------------------------------------------------------------------------
 
-PHPUnit 5.7.22 by Sebastian Bergmann and contributors.
+PHPUnit 5.7.23 by Sebastian Bergmann and contributors.
 
-.                                                                   1 / 1 (100%)
+........                                                            8 / 8 (100%)
 
-Time: 51 ms, Memory: 4.00MB
+Time: 3.93 seconds, Memory: 5.75MB
 
-OK (1 test, 1 assertion)
+OK (8 tests, 7753 assertions)
 
 END TESTS---------------------------------------------------------------------------
-Cleaning up the test DB...               OK
-Shutting down the PHP dev server...      OK
+
+Shutting down the server...             OK
 ```
 
 * If you get errors starting the PHP dev server, you can pass in a specific address and port where you want the PHP dev server to run:
@@ -118,15 +124,15 @@ $ mysql-ctl start
 
 ## Writing new tests
 
-* To create a new set of unit tests, create a copy of `test/TemplateTest.php` in the `test/tests/` directory. Rename the copy of `TemplateTest.php` to indicate what you're writing tests for.  For example, if you were writing tests for admin routes, you might go with something like `AdminRouteTests.php`.
+* To create a new set of unit tests, create a copy of `tests/.test-template/TemplateTest.php` in the `tests/` directory. Rename the copy of `TemplateTest.php` to indicate what you're writing tests for.  For example, if you were writing tests for admin routes, you might go with something like `AdminRouteTests.php`.
 
 ```bash
-test $ cp ./TemplateTest.php ./tests/AdminRouteTests.php
+$ cp ./tests/.test-template/TemplateTest.php ./tests/AdminRouteTests.php
 ```
 
 * Next, open the new copy and follow the directions provided by the `TODO`s in the file.
 
-* To run your new tests, just use shell script in the `/test` directory:
+* To run your new tests, just use shell script in the `/bin` directory:
 
 ```bash
 test $ ./runtests.sh localhost:56565
@@ -136,9 +142,8 @@ test $ ./runtests.sh localhost:56565
 
 ```php
 <?php
-
-// require the composer autoload file
-require dirname(__FILE__).'/../vendor/autoload.php';
+// autoload stuff
+require_once dirname(__FILE__).'/../vendor/autoload.php';
 
 // make using our class names nicer
 use PHPUnit\Framework\TestCase;
@@ -163,6 +168,4 @@ final class ExampleTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 }
-
-?>
 ```

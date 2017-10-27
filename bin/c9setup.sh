@@ -50,7 +50,7 @@ stop_spinner $?
 
 # import the database
 start_spinner "Importing the database..."
-sudo mysql c9 -N -e 'source /home/ubuntu/workspace/data/ReUseDB.sql;' >/dev/null 2>&1
+sudo mysql c9 -N -e 'source /home/ubuntu/workspace/resources/database/ReUseDB.sql;' >/dev/null 2>&1
 stop_spinner $?
 
 echo
@@ -65,7 +65,14 @@ stop_spinner $?
 # add environment db environment variables to apache config
 
 start_spinner "Adding database environment variables..."
-sudo sed -i -e 's/CustomLog ${APACHE_LOG_DIR}\/access.log combined/CustomLog ${APACHE_LOG_DIR}\/access.log combined\n\n    SetEnv REUSE_DB_URL ${IP}\n    SetEnv REUSE_DB_USER ${C9_USER}\n    SetEnv REUSE_DB_PW\n    SetEnv REUSE_DB_NAME c9\n\n/g' /etc/apache2/sites-enabled/001-cloud9.conf >/dev/null 2>&1
+sudo sed -i -e 's/CustomLog ${APACHE_LOG_DIR}\/access.log combined/\
+    CustomLog ${APACHE_LOG_DIR}\/access.log combined\n\n\
+    SetEnv REUSE_DB_URL ${IP}\n\
+    SetEnv REUSE_DB_USER ${C9_USER}\n\
+    SetEnv REUSE_DB_PW\n\
+    SetEnv REUSE_DB_NAME c9\n\
+    SetEnv BING_API_KEY AlKcRwWYnXjyBcUrW1rcP1QqDC7ZjH9SCVqVHMY1d8rk0LjmHjol80Rgu8qqsJ-P\n\n/g'\
+    /etc/apache2/sites-enabled/001-cloud9.conf >/dev/null 2>&1
 stop_spinner $?
 
 echo
