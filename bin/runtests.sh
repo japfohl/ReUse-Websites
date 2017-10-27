@@ -58,26 +58,15 @@ fi
 
 # 4) Setup the DB
 
-echo "Constructing the test DB...              TODO"
-
-# TODO: Build a test DB filled with random / valid data.  Perhaps using something like
-# Faker - https://github.com/fzaninotto/Faker
-
-# 5) Execute tests
-
 echo
 echo "BEGIN TESTS-------------------------------------------------------------------------"
 echo
 
-~/workspace/bin/phpunit tests
+~/workspace/vendor/bin/phpunit tests
 
 echo
 echo "END TESTS---------------------------------------------------------------------------"
 echo
-
-# 6) Clean up the DB
-
-echo "Cleaning up the test DB...              TODO"
 
 # 7) Shut down the API
 echo -n "Shutting down the server...             "

@@ -1,5 +1,7 @@
 # Getting Started
 
+_Please refer to the README documentation contained in the test directory for more information on testing._
+
 ## Cloud9 Related Documentation
 
 ### Setup
@@ -10,7 +12,7 @@
 $ ./bin/c9setup.sh
 ```
 
-* Once the script is finished running, you'll be ready to serve the website using the C9 apache web server, run all your tests, and access the projects MySQL database.
+* Once the script is finished running, you'll be ready to serve the website using the built in C9 apache web server, run all your tests, and access the project's MySQL database.
 
 ### MySQL
 
@@ -80,7 +82,9 @@ $ export API_ADDR=127.0.0.1:8001
 Where 8001 can be any unused port number. Keep in mind this number must be the number you use to start the development server
 in the section below.
 
-Please refer to the README documentation contained in the test directory for more information on testing.
+## Developing on Windows
+
+*** TODO!!
 
 ## General Information
 
@@ -103,5 +107,5 @@ Here are links to the various tools / frameworks used for this project.
 * [Slim Framework v2](http://docs.slimframework.com/)
 * [Guzzle HTTP Client](http://docs.guzzlephp.org/en/stable/)
 * [PHPUnit v5.7](https://phpunit.de/)
-* [Faker - Fake Data Generator]()https://github.com/fzaninotto/Faker)
+* [Faker - Fake Data Generator](https://github.com/fzaninotto/Faker)
 * [Using MySQL in Cloud9](https://community.c9.io/t/setting-up-mysql/1718)
