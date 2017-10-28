@@ -1,10 +1,11 @@
 <?php
 	
-	//For DEBUGGING	
+	//For DEBUGGING
+	// TODO: turn off in production
 	ini_set('display_errors', 'On');	
 
 	// autoload everything we'll need to run the app
-	require_once '../vendor/autoload.php';
+	require_once __DIR__ . '/../vendor/autoload.php';
 	use \Slim\Slim;
 
 	/**************************************************************************
@@ -22,7 +23,7 @@
     	require $routeFile;
     }
 
-	// test route
+	// test route TODO: Remove this in production
     $app->get('/hello/:name', function ($name) {
     	echo "Hello, $name";
     });

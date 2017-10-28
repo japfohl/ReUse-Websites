@@ -5,7 +5,6 @@
  */
 
 class Util {
-
     public static function formatLinksWithHttp($link) {
 
 	    $scheme = parse_url($link, PHP_URL_SCHEME);

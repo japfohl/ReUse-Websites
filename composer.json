@@ -17,7 +17,8 @@
       "classmap": [
        "src/view/ViewRenderer.php",
        "src/lib/Util.php",
-       "src/test/ApiTestCase.php"
-      ]
-    }
+       "src/test-helpers/ApiTestCase.php",
+       "src/lib/Query.php"
+     ]
+   }
 }
