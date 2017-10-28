@@ -18,7 +18,7 @@ function fetch_val($key, $array, $default = 'undefined') {
    *
  */
 $app->get('/admin', function() use ($app) {
-  $app->redirect("/admin2/loginPage.php");
+  $app->redirect("/admin/loginPage.php");
 });
 
 $app->response->headers->set('Content-Type', 'application/json');

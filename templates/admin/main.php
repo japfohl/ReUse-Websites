@@ -27,12 +27,7 @@
   <link href='https://fonts.googleapis.com/css?family=Rubik:700' rel='stylesheet' type='text/css'>
   <script src="../js/jquery-1.11.1.min.js"></script>
   <script src="../js/mainFunct.js"></script>
-  <script>
-  //ONLOAD -- GET requests and checking of session with jQuery
-  $(document).ready(function(){
-    checkSession();
-  });
-  </script>
+  
   </head>
   <body>
 
@@ -43,9 +38,9 @@
   <div class="container-fluid" id="smallCont">
     <div class="row">
       <div class="col-xs-12 col-md-12">
-        <br/>
+        <br></br>
         <h3>Database Management Options</h3>
-        <hr/>
+        <hr></hr>
         <form id="decide">
         <div class="form-group">
           <label>Choose Type: </label>
@@ -63,14 +58,13 @@
              <button Id ="submit" type ="submit" class="btn btn-default btn-lg" onclick="EditRoute(); return false" align="center">Modify or Delete From Selected</button>
           </div>
         </div> <!-- end form group -->
-      </form>
       </div> <!-- end form -->
       <div class="col-xs-12 col-md-12">
-        <hr/>
+        <hr></hr>
           <div class="filler"></div>
       </div>
+    </div> <!-- end row -->
   </div> <!-- end container-->
-
 
   <script src="../js/jquery-1.11.1.min.js"></script>
   <script src="../js/bootstrap.min.js"></script>

@@ -4,7 +4,6 @@ require_once dirname(__FILE__).'/../../vendor/autoload.php';
 
 // make using our class names nicer
 use PHPUnit\Framework\TestCase;
-use GuzzleHttp\Client;
 
 // example test case
 class ApiTestCase extends TestCase {

@@ -7,7 +7,24 @@
 	 * @apiSuccess {Webpage} /home/index.php The home page of the Reuse and Repair Directory
 	 */
 	$app->get('/', function() use ($app) {
-		$app->redirect('/home/index.php');
+
+		// perform queries
+		$qDonor = Query::getAllUniqueDonors();
+		$qRecycle = Query::getRecycleExclusiveLocations();
+		$qRepair = Query::getRepairExclusiveCategories();
+		$qReuse = Query::getReuseExclusiveCategories();
+
+		// set the response type
+		$app->response->headers->set('Content-Type', 'text/html');
+
+		// render the page
+		$app->render('home.php', array(
+			'donors' => $qDonor->fetch_all(MYSQLI_ASSOC),
+			'recycle' => $qRecycle->fetch_all(MYSQLI_ASSOC),
+			'repair' => $qRepair->fetch_all(MYSQLI_ASSOC),
+			'reuse' => $qReuse->fetch_all(MYSQLI_ASSOC),
+			'isAdminTemplate' => false
+		));
 	});
 
 	//replacing a single single-quote with two single-quotes in a given string
@@ -28,26 +45,8 @@
 	 */
 	$app->get('/business/repairExclusive', function(){
 
-		$mysqli = connectReuseDB();
-
-		$result = $mysqli->query("SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation, 
-												  loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude 
-								    FROM Reuse_Locations AS loc 
-								    LEFT JOIN States AS state ON state.id = loc.state_id 
-								    INNER JOIN Reuse_Locations_Items AS loc_item ON loc.id = loc_item.location_id 
-									INNER JOIN Reuse_Items AS item ON loc_item.item_id = item.id 
-									INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id 
-									WHERE loc.recycle <> 1 AND loc_item.Type = 1");
-
-		$returnArray = array();
-	    while($row = $result->fetch_object()){
-	      $returnArray[] = $row;
-	    }
-
-	    echo json_encode($returnArray);
-
-	    $result->close();
-	    $mysqli->close();
+		$result = Query::getRepairExclusiveLocations();
+	    echo json_encode($result->fetch_all(MYSQLI_ASSOC));
 	});
         
         
@@ -60,25 +59,8 @@
 	 */
 	$app->get('/business/reuseExclusive', function(){
 
-		$mysqli = connectReuseDB();
-
-		$result = $mysqli->query("SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation, 
-												  loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude 
-									FROM Reuse_Locations AS loc LEFT JOIN States AS state ON state.id = loc.state_id 
-								    INNER JOIN Reuse_Locations_Items AS loc_item ON loc.id = loc_item.location_id 
-								    INNER JOIN Reuse_Items AS item ON loc_item.item_id = item.id 
-								    INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id 
-								    WHERE cat.name NOT IN ('Repair', 'Repair Items', 'Recycle') AND loc.recycle <> 1 AND loc_item.Type = 0");
-
-		$returnArray = array();
-	    while($row = $result->fetch_object()){
-	      $returnArray[] = $row;
-	    }
-
-	    echo json_encode($returnArray);
-
-	    $result->close();
-	    $mysqli->close();
+		$res = Query::getReuseExclusiveLocations();
+		echo json_encode($res->fetch_all(MYSQLI_ASSOC));
 	});
 
 	/**
@@ -89,23 +71,8 @@
 	 */
 	$app->get('/business/recycleExclusive', function(){
 
-		$mysqli = connectReuseDB();
-
-		$result = $mysqli->query("SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation, 
-												  loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude 
-								    FROM Reuse_Locations AS loc 
-								    LEFT JOIN States AS state ON state.id = loc.state_id 
-								    WHERE loc.recycle = 1");
-
-		$returnArray = array();
-	    while($row = $result->fetch_object()){
-	      $returnArray[] = $row;
-	    }
-
-	    echo json_encode($returnArray);
-
-	    $result->close();
-	    $mysqli->close();
+		$res = Query::getRecycleExclusiveLocations();
+		echo json_encode($res->fetch_all(MYSQLI_ASSOC));
 	});
 
 
@@ -120,8 +87,6 @@
 	$app->get('/business/category/name/:cat_name', function($cat_name){
 		singleToDoubleQuotes($cat_name);
 		underscoreToSlash($cat_name);
-
-
 
 		$mysqli = connectReuseDB();
 	 	$cat_name = $mysqli->real_escape_string($cat_name);
@@ -782,26 +747,9 @@
 	 * @apiSuccess {JSON[]} returnArray All distinct category names not including Repair, Repair Items, and Recycle, ordered by ordered by category name.
 	 */
 	$app->get('/category/reuseExclusive', function(){
-		$mysqli = connectReuseDB();
 
-		//$result = $mysqli->query("SELECT DISTINCT cat.name FROM Reuse_Categories AS cat WHERE cat.name NOT IN ('Repair', 'Repair Items', 'Recycle') ORDER BY cat.name");
-
-                $result = $mysqli->query('SELECT DISTINCT c.name
-                                            FROM Reuse_Locations_Items l
-                                            JOIN Reuse_Items i ON l.item_id = i.id
-                                            JOIN Reuse_Categories c ON i.category_id = c.id
-                                            WHERE l.Type = 0
-                                            ORDER BY c.name ASC');
-                
-		$returnArray = array();
-	    while($row = $result->fetch_object()){
-	      $returnArray[] = $row;
-	    }
-
-	    echo json_encode($returnArray);
-
-	    $result->close();
-	    $mysqli->close();
+		$res = Query::getReuseExclusiveCategories();
+		echo json_encode($res->fetch_all(MYSQLI_ASSOC));
 	});
 
 	/** Current categories under repair -- not sure why this is necessary
@@ -811,24 +759,9 @@
 	 * @apiSuccess {JSON[]} returnArray All distinct category names for repair, ordered by ordered by category name.
 	 */
 	$app->get('/category/repairExclusive', function(){
-		$mysqli = connectReuseDB();
 
-		$result = $mysqli->query('SELECT DISTINCT c.name
-                                    FROM Reuse_Locations_Items l
-                                    JOIN Reuse_Items i ON l.item_id = i.id
-                                    JOIN Reuse_Categories c ON i.category_id = c.id
-                                    WHERE l.Type = 1
-                                    ORDER BY c.name ASC');
-                
-		$returnArray = array();
-	    while($row = $result->fetch_object()){
-	      $returnArray[] = $row;
-	    }
-
-	    echo json_encode($returnArray);
-
-	    $result->close();
-	    $mysqli->close();
+		$res = Query::getRepairExclusiveCategories();
+		echo json_encode($res->fetch_all(MYSQLI_ASSOC));
 	});
         
 	/**  Doesn't appear to be working 
@@ -873,21 +806,8 @@
 	 */
 	$app->get('/donor', function(){
 
-		$mysqli = connectReuseDB();
-
-		$result = $mysqli->query("SELECT DISTINCT donor.name, donor.description, donor.websiteurl 
-								   FROM Reuse_Donors AS donor 
-								   ORDER BY donor.name");
-
-		$returnArray = array();
-	    while($row = $result->fetch_object()){
-	      $returnArray[] = $row;
-	    }
-
-	    echo json_encode($returnArray);
-
-	    $result->close();
-	    $mysqli->close();
+		$res = Query::getAllUniqueDonors();
+		echo json_encode($res->fetch_all(MYSQLI_ASSOC));
 	});
 
 	/** Business Search returns if any part of the Business matches e.g. "lack" matches "Sedlack"
@@ -979,10 +899,12 @@
 					  FROM Reuse_Locations loc 
 					  INNER JOIN Reuse_Locations_Items rla ON loc.id = rla.location_id
 					  INNER JOIN Reuse_Items item ON rla.item_id = item.id
+					  INNER JOIN Reuse_Categories cat ON item.category_id = cat.id
 					  LEFT JOIN States ON States.id = loc.state_id
 					  WHERE 
 					  	(item.name LIKE '%$term%') OR
-					  	(loc.name LIKE '%$term%')
+					  	(loc.name LIKE '%$term%') OR
+						(cat.name LIKE '%$term%')
 					  ORDER BY loc.name ASC;";
 
 		$res = $mysqli->query($query);
