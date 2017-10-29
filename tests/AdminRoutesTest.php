@@ -1,13 +1,13 @@
 <?php
 // autoload stuff
-require_once dirname(__FILE__).'/../../vendor/autoload.php';
+require_once dirname(__FILE__).'/../vendor/autoload.php';
 
 // make using our class names nicer
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 
 // example test case
-final class AdminRoutesTest extends TestCase
+final class AdminRoutesTest extends ApiTestCase
 {
     // the GuzzleHttp client
     protected $client;

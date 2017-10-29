@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 
 // example test case
-final class ExampleTest extends TestCase
+final class ExampleTest extends ApiTestCase
 {
     // the GuzzleHttp client
     protected $client;

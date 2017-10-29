@@ -5,7 +5,7 @@ require_once dirname(__FILE__).'/../vendor/autoload.php';
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 
-final class LatitudeAndLongitudeRoutesTest extends TestCase {
+final class LatitudeAndLongitudeRoutesTest extends ApiTestCase {
 
     // class level variables accessible by each test being run
     protected $client;  // guzzle client
@@ -175,18 +175,5 @@ final class LatitudeAndLongitudeRoutesTest extends TestCase {
         }
 
         return $tempIds;
-    }
-
-    private function validateContentType($response) {
-
-        // should have content-type header
-        $this->assertTrue($response->hasHeader('content-type'));
-
-        $addr = getenv('API_ADDR');
-        if (strpos($addr, 'localhost') !== false || strpos($addr, '127.0.0.1') !== false) {
-            $this->assertEquals('text/xml;charset=UTF-8', $response->getHeader('content-type')[0]);
-        } else {
-            $this->assertEquals('application/xml', $response->getHeader('content-type')[0]);
-        }
     }
 }
