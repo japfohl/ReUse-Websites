@@ -28,6 +28,7 @@
 
 	<div class="header clearfix">
 		<nav>
+<<<<<<< HEAD
 			<form action="searchPage.php" method="GET">
 				<div class="input-group" style="width:250px">
 					<input id="searchTerm" type="text" class="form-control" placeholder="Search" name="term"/>
@@ -36,12 +37,21 @@
 					</span>
 				</div>
 			</form>
+=======
+			<div id="searchText" class="input-group" style="width: 250px">
+				<input id="searchTerm" type="text" class="form-control" placeholder="Search"/>
+				<span class="input-group-addon">
+					<i class="fa fa-search"></i>
+				</span>
+			</div>
+>>>>>>> initial working version of home
 			<ul class="nav nav-pills pull-right">
 				<li role="presentation" class="dropdown header-button">
 					<a href="category.php?type=repair" class="dropbtn header-link">
 						Repair <span class="caret"></span>
 					</a>
 					<div class="dropdown-content" id="header-repair-links">
+<<<<<<< HEAD
 					<?php foreach ($this->data['repair'] as $repair): ?>
 
 						<a href="category.php?type=repair&name=<?php echo rawurlencode($repair['name']); ?>">
@@ -49,6 +59,8 @@
 						</a>
 						
 					<?php endforeach; ?>
+=======
+>>>>>>> initial working version of home
 					</div>
 				</li>
 				<li role="presentation" class="dropdown header-button">
@@ -56,6 +68,7 @@
 						Reuse <span class="caret"></span>
 					</a>
 					<div class="dropdown-content" id="header-reuse-links">
+<<<<<<< HEAD
 					<?php foreach ($this->data['reuse'] as $reuse): ?>
 
 						<a href="category.php?type=reuse&name=<?php echo rawurlencode($reuse['name']); ?>">
@@ -63,6 +76,8 @@
 						</a>
 
 					<?php endforeach; ?>
+=======
+>>>>>>> initial working version of home
 					</div>
 				</li>
 				<li role="presentation" class="dropdown header-button">
@@ -70,6 +85,7 @@
 						Recycle <span class="caret"></span>
 					</a>
 					<div class="dropdown-content" id="header-recycle-links">
+<<<<<<< HEAD
 					<?php foreach($this->data['recycle'] as $recycle): ?>
 
 						<a href="business.php?name=<?php echo rawurlencode($recycle['name']); ?>">
@@ -77,6 +93,8 @@
 						</a>
 
 					<?php endforeach; ?>
+=======
+>>>>>>> initial working version of home
 					</div>
 				</li>
 				<li role="presentation" class="header-button">
