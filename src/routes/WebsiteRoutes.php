@@ -29,7 +29,9 @@
 
     $app->get('/templateexample/:name', function($name) use ($app) {
         $app->response->headers->set('Content-Type', 'text/html');
-        $app->render('exampleTemplate.php', array('name' => $name));
+        $app->render('exampleTemplate.php', array(
+			'name' => $name
+		));
     });
 
 	//replacing a single single-quote with two single-quotes in a given string
