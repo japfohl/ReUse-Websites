@@ -59,6 +59,35 @@ $app->response->headers->set('Content-Type', 'application/json');
 
 
     /**
+     * @api {get} /business/items/:business_id Returns the items a business accepts
+     *
+     * @apiName ReUseApp
+     * @apiGroup RUapi
+
+     * @apiParam {Integer} id business ID.
+     * @apiSuccess {string[]} items Returns the IDs of items accepted by that business
+     * @apiSuccess {integer} id ID of that item
+     */
+    $app->get('/business/:id/items', function($business_id) {
+        $mysqli = connectReuseDB();
+
+        $id = (int)$mysqli->real_escape_string($business_id);
+        $result = $mysqli->query("SELECT item_id
+                                  FROM Reuse_Locations_Items
+                                  WHERE Reuse_Locations_Items.location_id = '.$id.'");
+
+        $returnArray = array();
+        while($row = $result->fetch_object()){
+          $returnArray[] = $row;
+        }
+
+        echo json_encode($returnArray);
+
+        $result->close();
+        $mysqli->close();
+    });
+
+    /**
      * @api {get} /states Gets name and ID of all states, returns as JSON string
      *
      * @apiName ReUseApp
@@ -67,8 +96,7 @@ $app->response->headers->set('Content-Type', 'application/json');
      * @apiSuccess {string[]} name Names of all states are returned
      * @apiSuccess {integer} id ID of all states
      */
-
-    $app->get('/states', function() {
+    $app->get('/states', function() use ($app) {
         $mysqli = connectReuseDB();
 
         $result = $mysqli->query("SELECT name, id 
@@ -582,10 +610,11 @@ $app->response->headers->set('Content-Type', 'application/json');
      * @apiParam {string} state State
      * @apiParam {string} zip Zipcode
      */
-    $app->post('/changeBusiness', function(){
+    $app->post('/changeBusiness', function() use ($app) {
         $mysqli = connectReuseDB();
 
-        $oldName =  $mysqli->real_escape_string(fetch_val('oldName', $_POST));
+        $id = $mysqli->real_escape_string(fetch_val('id', $_POST));
+        $oldName = $mysqli->real_escape_string(fetch_val('oldName', $_POST));
         $name = $mysqli->real_escape_string(fetch_val('name', $_POST));
         $address = $mysqli->real_escape_string(fetch_val('add1', $_POST));
         $address2 = $mysqli->real_escape_string(fetch_val('add2', $_POST));
@@ -596,38 +625,66 @@ $app->response->headers->set('Content-Type', 'application/json');
         $website = $mysqli->real_escape_string(fetch_val('website', $_POST));
         $latitude = $mysqli->real_escape_string(fetch_val('latitude', $_POST));
         $longitude = $mysqli->real_escape_string(fetch_val('longitude', $_POST));
-
+        $items = fetch_val('items', $_POST);
+        $items_set = new \Ds\Set($items);
 
         if($state != 'undefined' && $oldName != 'undefined'){
-            $mysqli->query("UPDATE Reuse_Locations SET state_id = '$state' WHERE name = '$oldName'");
+            $mysqli->query("UPDATE Reuse_Locations SET state_id = '$state' WHERE id = '$id'");
         }
         if($address != 'undefined' && $oldName != 'undefined'){
-            $mysqli->query("UPDATE Reuse_Locations SET address_line_1 = '$address' WHERE name = '$oldName'");
+            $mysqli->query("UPDATE Reuse_Locations SET address_line_1 = '$address' WHERE id = '$id'");
         }
         if($address2 != 'undefined' && $oldName != 'undefined'){
-            $mysqli->query("UPDATE Reuse_Locations SET address_line_2 = '$address2' WHERE name = '$oldName'");
+            $mysqli->query("UPDATE Reuse_Locations SET address_line_2 = '$address2' WHERE id = '$id'");
         }
         if($phone != 'undefined' && $oldName != 'undefined'){
-            $mysqli->query("UPDATE Reuse_Locations SET phone = '$phone' WHERE name = '$oldName'");
+            $mysqli->query("UPDATE Reuse_Locations SET phone = '$phone' WHERE id = '$id'");
         }
         if($zipcode != 'undefined' && $oldName != 'undefined'){
-            $mysqli->query("UPDATE Reuse_Locations SET zip_code = '$zipcode' WHERE name = '$oldName'");
+            $mysqli->query("UPDATE Reuse_Locations SET zip_code = '$zipcode' WHERE id = '$id'");
         }
         if($city != 'undefined' && $oldName != 'undefined'){
-            $mysqli->query("UPDATE Reuse_Locations SET city = '$city' WHERE name = '$oldName'");
+            $mysqli->query("UPDATE Reuse_Locations SET city = '$city' WHERE id = '$id'");
         }
         if($website != 'undefined' && $oldName != 'undefined'){
-            $mysqli->query("UPDATE Reuse_Locations SET website = '$website' WHERE name = '$oldName'");
+            $mysqli->query("UPDATE Reuse_Locations SET website = '$website' WHERE id = '$id'");
         }
         if($name != 'undefined' && $oldName != 'undefined'){
-            $mysqli->query("UPDATE Reuse_Locations SET name = '$name' WHERE name = '$oldName'");
+            $mysqli->query("UPDATE Reuse_Locations SET name = '$name' WHERE id = '$id'");
         }
         if($latitude != 'undefined' && $oldName != 'undefined'){
-            $mysqli->query("UPDATE Reuse_Locations SET latitude = '$latitude' WHERE name = '$oldName'");
+            $mysqli->query("UPDATE Reuse_Locations SET latitude = '$latitude' WHERE id = '$id'");
         }
         if($longitude != 'undefined' && $oldName != 'undefined'){
-            $mysqli->query("UPDATE Reuse_Locations SET longitude = '$longitude' WHERE name = '$oldName'");
+            $mysqli->query("UPDATE Reuse_Locations SET longitude = '$longitude' WHERE id = '$id'");
         }
+
+        $locations_items_relations = $mysqli->query("SELECT item_id FROM Reuse_Locations_Items WHERE location_id = '$id'");
+        while($row = $locations_items_relations->fetch_array()){
+            $items_relations[] = $row[0];
+        }
+
+        foreach ($items_relations as &$this_item_id) {
+            if (!$items_set->contains($this_item_id)) {
+                if (!$mysqli->query("DELETE FROM Reuse_Locations_Items
+                                    WHERE location_id = '$id'
+                                    AND item_id = '$this_item_id'")) {
+                    $app->log->debug('Reuse_Locations_Items deletion query failed.');
+                    $app->log->debug($id);
+                    $app->log->debug($this_item_id);
+                }
+            }
+        }
+
+        foreach ($items as &$this_item_id) {
+            if (!$mysqli->query("INSERT INTO Reuse_Locations_Items (location_id, item_id)
+                                 VALUES ('$id', '$this_item_id')")) {
+                $app->log->debug('Reuse_Locations_Items insertion query failed.');
+                $app->log->debug($id);
+                $app->log->debug($this_item_id);
+            }
+        }
+
         $mysqli->close();
 
         /* Update Mobile Database */
@@ -656,7 +713,7 @@ $app->response->headers->set('Content-Type', 'application/json');
      * @apiParam {string} state State
      * @apiParam {string} zipcode Zipcode
      */
-    $app->post('/business', function(){
+    $app->post('/business', function() use ($app) {
         $mysqli = connectReuseDB();
 
         $name = $_POST['name'];
@@ -669,6 +726,7 @@ $app->response->headers->set('Content-Type', 'application/json');
         $latitude = $mysqli->real_escape_string(fetch_val('latitude', $_POST, null));
         $longitude = $mysqli->real_escape_string(fetch_val('longitude', $_POST, null));
         $website = $mysqli->real_escape_string(fetch_val('website', $_POST, null));
+        $accepted_items = $mysqli->real_escape_string(fetch_val('items', $_POST, null));
         
         /* Convert state_id to the string it references */
         if (!($stmt = $mysqli->prepare("SELECT abbreviation FROM  `States` WHERE id = ?"))){
@@ -708,6 +766,17 @@ $app->response->headers->set('Content-Type', 'application/json');
         /* execute */
         if(!$stmt->execute()){
             echo "Execute failed. (".$mysqli->connect_errno.")".$mysqli->connect_error;
+        }
+
+        /* Create relationships between accepted items and this new location */
+        $location_id = mysqli_insert_id($mysqli);
+        foreach (explode(',', $accepted_items) as &$this_item_id) {
+            if (!$mysqli->query("INSERT INTO Reuse_Locations_Items (location_id, item_id)
+                                 VALUES ('$location_id', '$this_item_id')")) {
+                $app->log->debug('Reuse_Locations_Items query failed.');
+                $app->log->debug('LOCATION ID: '.$location_id);
+                $app->log->debug('ITEM ID: '.$item_id);
+            }
         }
 
         /* updated */

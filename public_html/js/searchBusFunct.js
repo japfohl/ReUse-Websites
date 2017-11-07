@@ -11,6 +11,7 @@ var webURL = "";
 
 function saveClicked() {
     var payload = {};
+    payload.id = document.getElementById('bus_id').value;
     payload.oldName = document.getElementById('oldNameHidden').value;
     payload.name = document.getElementById('name').value;
     payload.add1 = document.getElementById('add1').value;
@@ -19,6 +20,8 @@ function saveClicked() {
     payload.zip = document.getElementById('zip').value;
     payload.phone = document.getElementById('phone').value;
     payload.website = document.getElementById('website').value;
+    payload.items = getChecked();
+
 
     if( $('#selectState').find("option:selected").val() == 'Select State'){
       payload.state = document.getElementById('stateHidden').value;
@@ -158,6 +161,44 @@ function getStatesDropdown(state_id) {
     });
 }
 
+function displayItems(business_item_set){
+    $.ajax({type:"GET",
+      url: webURL + "/RUapi/items",
+      dataType: 'json',
+      success: function(data){
+          var items = "";
+          for(var i = 0; i < data.length; i++){
+            items += "<div>";
+            items += "<input type='checkbox' id=" + data[i].id + " value=" + data[i].id + " name='box'";
+            if (business_item_set.has(data[i].id)) {
+                items += " checked";
+            } 
+            items += ">";
+            items += " <label for='" + data[i].id + "'> " + data[i].name + "</label>";
+            items += "</div>";
+          }
+          $("#item-list").html(items);
+      },
+    });
+}
+
+function fetchBusinessItems(id) {
+    items_set = new Set();
+
+    $.ajax({type:"GET",
+      url: webURL + "/RUapi/business/" + id + "/items",
+      dataType: 'json',
+      async: false,
+      success: function(data){
+          for (i = 0; i < data.length; i++) {
+            items_set.add(data[i].item_id);
+          }
+        },
+    });
+
+    return items_set;
+}
+
 /*
 function editBusiness()
 purpose: edit any field of any business searched for previously by name
@@ -206,6 +247,8 @@ function editBusiness() {
             //Show all associated documents below
             allDocs($('#bus_id')[0].value);
 
+            items_set = fetchBusinessItems(data[0].id);
+            displayItems(items_set);
         }
     });
 }
