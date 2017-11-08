@@ -13,20 +13,17 @@ function initIndexMap() {
     // create the new map
     var indexMap = corvallisMap();
 
+    // object to map pin colors to location type
+    var pincolors = {
+        "recycle": "7C903A",
+        "repair": "47A6B2",
+        "reuse": "F89420"
+    };
+
     // add data to the map
     for (i = 0; i < mapJson.length; i++) {
-        // set the pin color based on the type of location
-        var pinColor;
-        if (mapJson[i].type === "recycle") {
-            pinColor = "7C903A"
-        } else if (mapJson[i].type === "repair") {
-            pinColor = "47A6B2";
-        } else {
-            pinColor = "F89420";
-        }
-
         // create the pins and data for the marker
-        var pinImage = pin(pinColor);
+        var pinImage = pin(pincolors[mapJson[i].type]);
         var latLong = LatLng(mapJson[i].lat, mapJson[i].long);
         var myMarker = marker(
             latLong, indexMap, pinImage, mapJson[i].name, mapJson[i].add,
