@@ -16,8 +16,9 @@
 	<!-- JS -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="js/mapFunct.js" type="text/javascript"></script>
+    <script src="js/home.js"></script>
 	<script defer
-			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiF8JALjnfAymACLHqPAhlrLlUj3y9DTo&callback=initGeneralMap">
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiF8JALjnfAymACLHqPAhlrLlUj3y9DTo&callback=initIndexMap">
 	</script>
 
 </body>

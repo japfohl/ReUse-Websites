@@ -28,4 +28,13 @@ class Util {
 
         $string = str_replace("_","/", $string);
     }
+
+    // Helper used to safely fetch values from associative arrays
+    public static function fetch_val($key, $array, $default = 'undefined') {
+        if (array_key_exists($key, $array)) {
+            return $array[$key];
+        } else {
+            return $default;
+        }
+    }
 }

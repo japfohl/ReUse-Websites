@@ -1,12 +1,3 @@
-<?php
-
-// get all the data for rendering the header
-$recycle = Query::getRecycleExclusiveLocations()->fetch_all(MYSQLI_ASSOC);
-$repair = Query::getRepairExclusiveCategories()->fetch_all(MYSQLI_ASSOC);
-$reuse = Query::getReuseExclusiveCategories()->fetch_all(MYSQLI_ASSOC);
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,7 +42,7 @@ $reuse = Query::getReuseExclusiveCategories()->fetch_all(MYSQLI_ASSOC);
 						Repair <span class="caret"></span>
 					</a>
 					<div class="dropdown-content" id="header-repair-links">
-					<?php foreach ($repair as $r): ?>
+					<?php foreach ($this->data['repairCats'] as $r): ?>
 
 						<a href="category.php?type=repair&name=<?php echo rawurlencode($r['name']); ?>">
 							<?php echo $r['name']; ?>
@@ -65,7 +56,7 @@ $reuse = Query::getReuseExclusiveCategories()->fetch_all(MYSQLI_ASSOC);
 						Reuse <span class="caret"></span>
 					</a>
 					<div class="dropdown-content" id="header-reuse-links">
-					<?php foreach ($reuse as $r): ?>
+					<?php foreach ($this->data['reuseCats'] as $r): ?>
 
 						<a href="category.php?type=reuse&name=<?php echo rawurlencode($r['name']); ?>">
 							<?php echo $r['name']; ?>
@@ -79,7 +70,7 @@ $reuse = Query::getReuseExclusiveCategories()->fetch_all(MYSQLI_ASSOC);
 						Recycle <span class="caret"></span>
 					</a>
 					<div class="dropdown-content" id="header-recycle-links">
-					<?php foreach($recycle as $r): ?>
+					<?php foreach($this->data['recycleLocs'] as $r): ?>
 
 						<a href="business.php?name=<?php echo rawurlencode($r['name']); ?>">
 							<?php echo $r['name']; ?>

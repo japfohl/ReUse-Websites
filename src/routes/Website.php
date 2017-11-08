@@ -8,14 +8,24 @@
 $app->get('/', function() use ($app) {
 
     // perform queries
-    $qDonor = Query::getAllUniqueDonors();
+    $qDonors = Query::getAllUniqueDonors();
+    $qRecycleLocs = Query::getRecycleExclusiveLocations();
+    $qRepairLocs = Query::getRepairExclusiveLocations();
+    $qReuseLocs = Query::getReuseExclusiveLocations();
+    $qRepairCats = Query::getRepairExclusiveCategories();
+    $qReuseCats = Query::getReuseExclusiveCategories();
 
     // set the response type
     $app->response->headers->set('Content-Type', 'text/html');
 
     // render the page
     $app->render('home.php', array(
-        'donors' => $qDonor->fetch_all(MYSQLI_ASSOC),
+        'donors' => $qDonors->fetch_all(MYSQLI_ASSOC),
+        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'repairLocs' => $qRepairLocs->fetch_all(MYSQLI_ASSOC),
+        'reuseLocs' => $qReuseLocs->fetch_all(MYSQLI_ASSOC),
+        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
         'isAdminTemplate' => false
     ));
 });

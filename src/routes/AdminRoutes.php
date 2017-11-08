@@ -1,15 +1,5 @@
 <?php
 
-// Helper used to safely fetch POST values. This should be placed
-// somewhere better eventually. <~ TODO
-function fetch_val($key, $array, $default = 'undefined') {
-    if (array_key_exists($key, $array)) {
-        return $array[$key];
-    } else {
-        return $default;
-    }
-}
-
 //Routes used by the admin portal to change or view the database.
 
 /**
@@ -545,9 +535,9 @@ $app->response->headers->set('Content-Type', 'application/json');
     $app->post('/changeItem', function(){
         $mysqli = connectReuseDB();
 
-        $oldName = $mysqli->real_escape_string(fetch_val('oldName', $_POST));
-        $name = $mysqli->real_escape_string(fetch_val('name', $_POST));
-        $cat = $mysqli->real_escape_string(fetch_val('cat', $_POST));
+        $oldName = $mysqli->real_escape_string(Util::fetch_val('oldName', $_POST));
+        $name = $mysqli->real_escape_string(Util::fetch_val('name', $_POST));
+        $cat = $mysqli->real_escape_string(Util::fetch_val('cat', $_POST));
 
         if($name != 'undefined' && $oldName != 'undefined'){
             $mysqli->query("UPDATE Reuse_Items 
@@ -585,17 +575,17 @@ $app->response->headers->set('Content-Type', 'application/json');
     $app->post('/changeBusiness', function(){
         $mysqli = connectReuseDB();
 
-        $oldName =  $mysqli->real_escape_string(fetch_val('oldName', $_POST));
-        $name = $mysqli->real_escape_string(fetch_val('name', $_POST));
-        $address = $mysqli->real_escape_string(fetch_val('add1', $_POST));
-        $address2 = $mysqli->real_escape_string(fetch_val('add2', $_POST));
-        $zipcode = $mysqli->real_escape_string(fetch_val('zip', $_POST));
-        $city = $mysqli->real_escape_string(fetch_val('city', $_POST));
-        $state = $mysqli->real_escape_string(fetch_val('state', $_POST));
-        $phone = $mysqli->real_escape_string(fetch_val('phone', $_POST));
-        $website = $mysqli->real_escape_string(fetch_val('website', $_POST));
-        $latitude = $mysqli->real_escape_string(fetch_val('latitude', $_POST));
-        $longitude = $mysqli->real_escape_string(fetch_val('longitude', $_POST));
+        $oldName =  $mysqli->real_escape_string(Util::fetch_val('oldName', $_POST));
+        $name = $mysqli->real_escape_string(Util::fetch_val('name', $_POST));
+        $address = $mysqli->real_escape_string(Util::fetch_val('add1', $_POST));
+        $address2 = $mysqli->real_escape_string(Util::fetch_val('add2', $_POST));
+        $zipcode = $mysqli->real_escape_string(Util::fetch_val('zip', $_POST));
+        $city = $mysqli->real_escape_string(Util::fetch_val('city', $_POST));
+        $state = $mysqli->real_escape_string(Util::fetch_val('state', $_POST));
+        $phone = $mysqli->real_escape_string(Util::fetch_val('phone', $_POST));
+        $website = $mysqli->real_escape_string(Util::fetch_val('website', $_POST));
+        $latitude = $mysqli->real_escape_string(Util::fetch_val('latitude', $_POST));
+        $longitude = $mysqli->real_escape_string(Util::fetch_val('longitude', $_POST));
 
 
         if($state != 'undefined' && $oldName != 'undefined'){
@@ -660,15 +650,15 @@ $app->response->headers->set('Content-Type', 'application/json');
         $mysqli = connectReuseDB();
 
         $name = $_POST['name'];
-        $address = $mysqli->real_escape_string(fetch_val('address', $_POST, null));
-        $address2 = $mysqli->real_escape_string(fetch_val('address2', $_POST, null));
-        $city = $mysqli->real_escape_string(fetch_val('city', $_POST, null));
-        $stateId = $mysqli->real_escape_string(fetch_val('state', $_POST, 37)); // Default to Oregon
-        $zipcode = $mysqli->real_escape_string(fetch_val('zipcode', $_POST, null));
-        $phone = $mysqli->real_escape_string(fetch_val('phone', $_POST, null));
-        $latitude = $mysqli->real_escape_string(fetch_val('latitude', $_POST, null));
-        $longitude = $mysqli->real_escape_string(fetch_val('longitude', $_POST, null));
-        $website = $mysqli->real_escape_string(fetch_val('website', $_POST, null));
+        $address = $mysqli->real_escape_string(Util::fetch_val('address', $_POST, null));
+        $address2 = $mysqli->real_escape_string(Util::fetch_val('address2', $_POST, null));
+        $city = $mysqli->real_escape_string(Util::fetch_val('city', $_POST, null));
+        $stateId = $mysqli->real_escape_string(Util::fetch_val('state', $_POST, 37)); // Default to Oregon
+        $zipcode = $mysqli->real_escape_string(Util::fetch_val('zipcode', $_POST, null));
+        $phone = $mysqli->real_escape_string(Util::fetch_val('phone', $_POST, null));
+        $latitude = $mysqli->real_escape_string(Util::fetch_val('latitude', $_POST, null));
+        $longitude = $mysqli->real_escape_string(Util::fetch_val('longitude', $_POST, null));
+        $website = $mysqli->real_escape_string(Util::fetch_val('website', $_POST, null));
         
         /* Convert state_id to the string it references */
         if (!($stmt = $mysqli->prepare("SELECT abbreviation FROM  `States` WHERE id = ?"))){
@@ -773,8 +763,8 @@ $app->response->headers->set('Content-Type', 'application/json');
     $app->post('/updateItems', function(){
         $mysqli = connectReuseDB();
 
-        $cat = $mysqli->real_escape_string(fetch_val('category', $_POST));
-        $name = $mysqli->real_escape_string(fetch_val('name', $_POST));
+        $cat = $mysqli->real_escape_string(Util::fetch_val('category', $_POST));
+        $name = $mysqli->real_escape_string(Util::fetch_val('name', $_POST));
 
         if($cat != 'undefined' && $name != 'undefined'){
             $mysqli->query("UPDATE Reuse_Items SET category_id = '$cat' WHERE Reuse_Items.name = '$name'");
