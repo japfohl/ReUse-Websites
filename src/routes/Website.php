@@ -37,5 +37,3 @@ $app->get('/about', function() use ($app) {
 $app->get('/contact', function() use ($app) {
     // TODO: render contact page
 });
-
-
