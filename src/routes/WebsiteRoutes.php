@@ -1,48 +1,4 @@
 <?php
-
-    /**
-       * @api {get} /
-     * @apiName ReUseWebsite
-     *
-     * @apiSuccess {Webpage} /home/index.php The home page of the Reuse and Repair Directory
-     */
-    $app->get('/', function() use ($app) {
-        $app->redirect('/home/index.php');
-    });
-
-    $app->group('/v2', function() use ($app) {
-        $app->get('/', function() use ($app) {
-    
-            // perform queries
-            $qDonor = Query::getAllUniqueDonors();
-            $qRecycle = Query::getRecycleExclusiveLocations();
-            $qRepair = Query::getRepairExclusiveCategories();
-            $qReuse = Query::getReuseExclusiveCategories();
-    
-            // set the response type
-            $app->response->headers->set('Content-Type', 'text/html');
-    
-            // render the page
-            $app->render('home.php', array(
-                'donors' => $qDonor->fetch_all(MYSQLI_ASSOC),
-                'recycle' => $qRecycle->fetch_all(MYSQLI_ASSOC),
-                'repair' => $qRepair->fetch_all(MYSQLI_ASSOC),
-                'reuse' => $qReuse->fetch_all(MYSQLI_ASSOC),
-                'isAdminTemplate' => false
-            ));
-        });
-    });
-
-    //replacing a single single-quote with two single-quotes in a given string
-    function singleToDoubleQuotes(&$string) {
-        $string = str_replace("'","''", $string);
-    }
-
-    //replacing a single underscore with a slash
-    function underscoreToSlash(&$string) {
-        $string = str_replace("_","/", $string);
-    }
-
     /**
        * @api {get} /business/repairExclusive
      * @apiName ReUseApp
@@ -91,11 +47,12 @@
      * @apiSuccess {JSON[]} returnArray Distinct businesses associated with a given category, ordered by business names.
      */
     $app->get('/business/category/name/:cat_name', function($cat_name){
-        singleToDoubleQuotes($cat_name);
-        underscoreToSlash($cat_name);
 
         $mysqli = connectReuseDB();
-         $cat_name = $mysqli->real_escape_string($cat_name);
+
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
+        $cat_name = $mysqli->real_escape_string($cat_name);
 
         $result = $mysqli->query("SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation, 
                                                   loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude 
@@ -114,8 +71,6 @@
 
         echo json_encode($returnArray);
 
-        $result->close();
-        $mysqli->close();
     });
 
     /** TODO This is buggy Businesses pop up on both searches
@@ -126,8 +81,8 @@
      * @apiSuccess {JSON[]} returnArray Distinct businesses not associated with a given category, ordered by business names.
      */
     $app->get('/business/category/name/not/:cat_name', function($cat_name){
-        singleToDoubleQuotes($cat_name);
-        underscoreToSlash($cat_name);
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
 
         $mysqli = connectReuseDB();
         $cat_name = $mysqli->real_escape_string($cat_name);
@@ -160,8 +115,8 @@
      * @apiSuccess {JSON[]} returnArray Distinct reuse businesses associated with a given category, ordered by business names.
      */
     $app->get('/reuse/business/category/name/:cat_name', function($cat_name){
-        singleToDoubleQuotes($cat_name);
-        underscoreToSlash($cat_name);
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
 
         $mysqli = connectReuseDB();
         $cat_name = $mysqli->real_escape_string($cat_name);
@@ -195,8 +150,8 @@
      * @apiSuccess {JSON[]} returnArray Distinct repair businesses associated with a given category, ordered by business names.
      */
     $app->get('/repair/business/category/name/:cat_name', function($cat_name){
-        singleToDoubleQuotes($cat_name);
-        underscoreToSlash($cat_name);
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
 
         $mysqli = connectReuseDB();
         $cat_name = $mysqli->real_escape_string($cat_name);
@@ -230,8 +185,8 @@
      * @apiSuccess {JSON[]} returnArray Distinct repair businesses not associated with a given category, ordered by business names.
      */
     $app->get('/repair/business/category/name/not/:cat_name', function($cat_name){
-        singleToDoubleQuotes($cat_name);
-        underscoreToSlash($cat_name);
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
 
         $mysqli = connectReuseDB();
         $cat_name = $mysqli->real_escape_string($cat_name);
@@ -294,8 +249,8 @@
      * @apiSuccess {JSON[]} returnArray Distinct businesses accepting a given item.
      */
     $app->get('/business/item/name/:item_name', function($item_name){
-        singleToDoubleQuotes($item_name);
-        underscoreToSlash($item_name);
+        Util::singleToDoubleQuotes($item_name);
+        Util::underscoreToSlash($item_name);
 
         $mysqli = connectReuseDB();
          $item_name = $mysqli->real_escape_string($item_name);
@@ -326,8 +281,8 @@
      * @apiSuccess {JSON[]} returnArray Distinct reuse businesses accepting a given item.
      */
     $app->get('/reuse/business/item/name/:item_name', function($item_name){
-        singleToDoubleQuotes($item_name);
-        underscoreToSlash($item_name);
+        Util::singleToDoubleQuotes($item_name);
+        Util::underscoreToSlash($item_name);
 
         $mysqli = connectReuseDB();
 
@@ -360,8 +315,8 @@
      * @apiSuccess {JSON[]} returnArray Distinct repair businesses accepting a given item.
      */
     $app->get('/repair/business/item/name/:item_name', function($item_name){
-        singleToDoubleQuotes($item_name);
-        underscoreToSlash($item_name);
+        Util::singleToDoubleQuotes($item_name);
+        Util::underscoreToSlash($item_name);
 
         $mysqli = connectReuseDB();
 
@@ -398,11 +353,10 @@
      */
     $app->get('/business/category/name/:cat_name/item/name/:item_name', function($cat_name, $item_name){
 
-        singleToDoubleQuotes($cat_name);
-        singleToDoubleQuotes($item_name);
-        underscoreToSlash($item_name);
-        underscoreToSlash($cat_name);
-        //echo $cat_name."	".$item_name;
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
+        Util::singleToDoubleQuotes($item_name);
+        Util::underscoreToSlash($item_name);
 
         $mysqli = connectReuseDB();
         $item_name = $mysqli->real_escape_string($item_name);
@@ -439,11 +393,10 @@
      */
     $app->get('/reuse/business/category/name/:cat_name/item/name/:item_name', function($cat_name, $item_name){
 
-        singleToDoubleQuotes($cat_name);
-        singleToDoubleQuotes($item_name);
-        underscoreToSlash($item_name);
-        underscoreToSlash($cat_name);
-        //echo $cat_name."	".$item_name;
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
+        Util::singleToDoubleQuotes($item_name);
+        Util::underscoreToSlash($item_name);
 
         $mysqli = connectReuseDB();
 
@@ -480,11 +433,10 @@
      */
     $app->get('/repair/business/category/name/:cat_name/item/name/:item_name', function($cat_name, $item_name){
 
-        singleToDoubleQuotes($cat_name);
-        singleToDoubleQuotes($item_name);
-        underscoreToSlash($item_name);
-        underscoreToSlash($cat_name);
-        //echo $cat_name."	".$item_name;
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
+        Util::singleToDoubleQuotes($item_name);
+        Util::underscoreToSlash($item_name);
 
         $mysqli = connectReuseDB();
         $item_name = $mysqli->real_escape_string($item_name);
@@ -523,8 +475,8 @@
     $app->get('/business/name/:bus_name', function($bus_name){
         $mysqli = connectReuseDB();
 
-        singleToDoubleQuotes($bus_name);
-        underscoreToSlash($bus_name);
+        Util::singleToDoubleQuotes($bus_name);
+        Util::underscoreToSlash($bus_name);
         $bus_name = $mysqli->real_escape_string($bus_name);
 
         $result = $mysqli->query("SELECT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation, loc.phone, loc.website, 
@@ -551,8 +503,8 @@
     $app->get('/item/business/name/:bus_name', function($bus_name){
         $mysqli = connectReuseDB();
 
-        singleToDoubleQuotes($bus_name);
-        underscoreToSlash($bus_name);
+        Util::singleToDoubleQuotes($bus_name);
+        Util::underscoreToSlash($bus_name);
         $bus_name = $mysqli->real_escape_string($bus_name);
 
         $result = $mysqli->query("SELECT DISTINCT item.name FROM Reuse_Items AS item 
@@ -582,8 +534,8 @@
      */
     $app->get('/item/category/name/:cat_name', function($cat_name){
 
-        singleToDoubleQuotes($cat_name);
-        underscoreToSlash($cat_name);
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
 
 
 
@@ -620,8 +572,8 @@
      */
     $app->get('/reuse/item/category/name/:cat_name', function($cat_name){
 
-        singleToDoubleQuotes($cat_name);
-        underscoreToSlash($cat_name);
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
 
 
 
@@ -657,8 +609,8 @@
      */
     $app->get('/repair/item/category/name/:cat_name', function($cat_name){
 
-        singleToDoubleQuotes($cat_name);
-        underscoreToSlash($cat_name);
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
 
 
 
@@ -779,8 +731,8 @@
      * @apiSuccess {JSON[]} returnArray Distinct documents/links associated with a given business, ordered by document name.
      */
     $app->get('/document/business/name/:bus_name', function($bus_name){
-        singleToDoubleQuotes($bus_name);
-        underscoreToSlash($bus_name);
+        Util::singleToDoubleQuotes($cat_name);
+        Util::underscoreToSlash($cat_name);
 
         $mysqli = connectReuseDB();
 
