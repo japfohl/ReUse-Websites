@@ -31,9 +31,9 @@ $app->get('/', function() use ($app) {
 });
 
 $app->get('/about', function() use ($app) {
-    // TODO: render the about page
+    echo "About page";
 });
 
 $app->get('/contact', function() use ($app) {
-    // TODO: render contact page
+    echo "Contact page";
 });

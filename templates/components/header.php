@@ -80,10 +80,10 @@
 					</div>
 				</li>
 				<li role="presentation" class="header-button">
-					<a href="about.php" class="header-link">About</a>
+					<a href="/about" class="header-link">About</a>
 				</li>
 				<li role="presentation" class="header-button">
-					<a href="contact.php" class="header-link">Contact</a>
+					<a href="/contact" class="header-link">Contact</a>
 				</li>
 				<li role="presentation" class="header-button">
 					<a href="admin/loginPage.php" class="header-link">Admin</a>
