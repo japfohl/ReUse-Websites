@@ -23,82 +23,74 @@
 </head>
 
 <body>
-
-<div class="container">
-
-	<div class="header clearfix">
-		<nav>
-			<form action="searchPage.php" method="GET">
-				<div class="input-group" style="width:250px">
-					<input id="searchTerm" type="text" class="form-control" placeholder="Search" name="term"/>
-					<span class="input-group-addon">
-						<i class="fa fa-search"></i>
-					</span>
-				</div>
-			</form>
-			<ul class="nav nav-pills pull-right">
-				<li role="presentation" class="dropdown header-button">
-					<a href="category.php?type=repair" class="dropbtn header-link">
-						Repair <span class="caret"></span>
-					</a>
-					<div class="dropdown-content" id="header-repair-links">
-					<?php foreach ($this->data['repairCats'] as $r): ?>
-
-						<a href="category.php?type=repair&name=<?php echo rawurlencode($r['name']); ?>">
-							<?php echo $r['name']; ?>
-						</a>
-						
-					<?php endforeach; ?>
-					</div>
-				</li>
-				<li role="presentation" class="dropdown header-button">
-					<a href="category.php?type=reuse" class="dropbtn header-link">
-						Reuse <span class="caret"></span>
-					</a>
-					<div class="dropdown-content" id="header-reuse-links">
-					<?php foreach ($this->data['reuseCats'] as $r): ?>
-
-						<a href="category.php?type=reuse&name=<?php echo rawurlencode($r['name']); ?>">
-							<?php echo $r['name']; ?>
-						</a>
-
-					<?php endforeach; ?>
-					</div>
-				</li>
-				<li role="presentation" class="dropdown header-button">
-					<a href="recycle.php" class="dropbtn header-link">
-						Recycle <span class="caret"></span>
-					</a>
-					<div class="dropdown-content" id="header-recycle-links">
-					<?php foreach($this->data['recycleLocs'] as $r): ?>
-
-						<a href="business.php?name=<?php echo rawurlencode($r['name']); ?>">
-							<?php echo $r['name']; ?>
-						</a>
-
-					<?php endforeach; ?>
-					</div>
-				</li>
-				<li role="presentation" class="header-button">
-					<a href="/about" class="header-link">About</a>
-				</li>
-				<li role="presentation" class="header-button">
-					<a href="/contact" class="header-link">Contact</a>
-				</li>
-				<li role="presentation" class="header-button">
-					<a href="admin/loginPage.php" class="header-link">Admin</a>
-				</li>
-				<li role="presentation" class="header-button">
-					<a href="http://sustainablecorvallis.org/"
-					   target="_blank"
-					   class="header-link">
-						<img id="header-icon" src="img/CSCRectangular.png">
-					</a>
-				</li>
-			</ul>
-			<a href ="home/index.php">
-				<img align="left" id="header-icon" src="img/CSCLogo.png">
-				<h3 class="text-muted" id="header-title">Corvallis-Area ReUse and Repair Directory</h3>
-			</a>
-		</nav>
-	</div>
+    <div class="container">
+        <div class="header clearfix">
+            <nav>
+                <form action="searchPage.php" method="GET">
+                    <div class="input-group" style="width:250px">
+                        <input id="searchTerm" type="text" class="form-control" placeholder="Search" name="term"/>
+                        <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                </form>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="dropdown header-button">
+                        <a href="category.php?type=repair" class="dropbtn header-link">
+                            Repair <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-content" id="header-repair-links">
+                        <?php foreach ($this->data['repairCats'] as $r): ?>
+                            <a href="category.php?type=repair&name=<?php echo rawurlencode($r['name']); ?>">
+                                <?php echo $r['name']; ?>
+                            </a>
+                        <?php endforeach; ?>
+                        </div>
+                    </li>
+                    <li role="presentation" class="dropdown header-button">
+                        <a href="category.php?type=reuse" class="dropbtn header-link">
+                            Reuse <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-content" id="header-reuse-links">
+                        <?php foreach ($this->data['reuseCats'] as $r): ?>
+                            <a href="category.php?type=reuse&name=<?php echo rawurlencode($r['name']); ?>">
+                                <?php echo $r['name']; ?>
+                            </a>
+                        <?php endforeach; ?>
+                        </div>
+                    </li>
+                    <li role="presentation" class="dropdown header-button">
+                        <a href="recycle.php" class="dropbtn header-link">
+                            Recycle <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-content" id="header-recycle-links">
+                        <?php foreach($this->data['recycleLocs'] as $r): ?>
+                            <a href="business.php?name=<?php echo rawurlencode($r['name']); ?>">
+                                <?php echo $r['name']; ?>
+                            </a>
+                        <?php endforeach; ?>
+                        </div>
+                    </li>
+                    <li role="presentation" class="header-button">
+                        <a href="/about" class="header-link">About</a>
+                    </li>
+                    <li role="presentation" class="header-button">
+                        <a href="/contact" class="header-link">Contact</a>
+                    </li>
+                    <li role="presentation" class="header-button">
+                        <a href="admin/loginPage.php" class="header-link">Admin</a>
+                    </li>
+                    <li role="presentation" class="header-button">
+                        <a href="http://sustainablecorvallis.org/"
+                           target="_blank"
+                           class="header-link">
+                            <img id="header-icon" src="img/CSCRectangular.png">
+                        </a>
+                    </li>
+                </ul>
+                <a href ="/">
+                    <img align="left" id="header-icon" src="img/CSCLogo.png">
+                    <h3 class="text-muted" id="header-title">Corvallis-Area ReUse and Repair Directory</h3>
+                </a>
+            </nav>
+	    </div>

@@ -26,7 +26,10 @@ $app->get('/', function() use ($app) {
         'reuseLocs' => $qReuseLocs->fetch_all(MYSQLI_ASSOC),
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
-        'isAdminTemplate' => false
+        'isAdminTemplate' => false,
+        'hasMap' => true,
+		'mapCallback' => 'initIndexMap',
+		'preJsSpecial' => array('js/home.js')
     ));
 });
 
@@ -35,5 +38,26 @@ $app->get('/about', function() use ($app) {
 });
 
 $app->get('/contact', function() use ($app) {
-    echo "Contact page";
+
+    // do queries
+    $qRepairCats = Query::getRepairExclusiveCategories();
+    $qReuseCats = Query::getReuseExclusiveCategories();
+    $qDonors = Query::getAllUniqueDonors();
+    $qRecycleLocs = Query::getRecycleExclusiveLocations();
+
+    // set headers
+    $app->response->headers->set('Content-Type', 'text/html');
+
+    // render
+    $app->render('contact.php', array(
+		'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+		'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
+		'donors' => $qDonors->fetch_all(MYSQLI_ASSOC),
+		'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'isAdminTemplate' => false,
+        'hasMap' => false,
+        'cssSpecial' => array(
+            "https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css"
+        )
+    ));
 });
