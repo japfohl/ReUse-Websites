@@ -19,7 +19,19 @@
 		  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href="css/jumbotron-narrow.css" rel="stylesheet">
 	<link href="css/publicSite.css" rel="stylesheet">
-	<link href="css/map.css" rel="stylesheet">
+
+    <?php if ($this->data['cssSpecial']): ?>
+        <?php foreach ($this->data['cssSpecial'] as $css): ?>
+            <!-- Inject custom CSS if there is any -->
+            <link rel="stylesheet" href="<?php echo $css; ?>">
+        <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php if ($this->data['hasMap']): ?>
+        <!--  Include map styles when there is a map  -->
+	    <link href="css/map.css" rel="stylesheet">
+    <?php endif; ?>
+
 </head>
 
 <body>

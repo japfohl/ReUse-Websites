@@ -24,10 +24,5 @@
     	require $routeFile;
     }
 
-	// test route TODO: Remove this in production
-    $app->get('/hello/:name', function ($name) {
-    	echo "Hello, $name";
-    });
-
 	// run
 	$app->run();
