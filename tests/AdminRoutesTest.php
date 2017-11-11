@@ -18,13 +18,6 @@ final class AdminRoutesTest extends ApiTestCase
         $this->client = new Client(['base_uri' => getenv('API_ADDR')]);
     }
 
-    // example test method called on the GET /hello/{name} route
-    public function testHelloNameRouteReturnsHelloAndProvidedName()
-    {
-        $response = $this->client->request('GET', '/hello/testName');
-        $this->assertEquals(200, $response->getStatusCode());
-    }
-
     public function testAddBusinessDocRoute()
     {
         $response = $this->client->request('POST', '/RUapi/addBusinessDoc', [

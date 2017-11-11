@@ -34,7 +34,25 @@ $app->get('/', function() use ($app) {
 });
 
 $app->get('/about', function() use ($app) {
-    echo "About page";
+
+    // do queries
+    $qRepairCats = Query::getRepairExclusiveCategories();
+    $qReuseCats = Query::getReuseExclusiveCategories();
+    $qDonors = Query::getAllUniqueDonors();
+    $qRecycleLocs = Query::getRecycleExclusiveLocations();
+
+    // set headers
+    $app->response->headers->set('Content-type', 'text/html');
+
+    // render
+    $app->render('app/appBase.php', array(
+        'appTemplate' => 'about.php',
+        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
+        'donors' => $qDonors->fetch_all(MYSQLI_ASSOC),
+        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'hasMap' => false,
+    ));
 });
 
 $app->get('/contact', function() use ($app) {
@@ -42,7 +60,6 @@ $app->get('/contact', function() use ($app) {
     // do queries
     $qRepairCats = Query::getRepairExclusiveCategories();
     $qReuseCats = Query::getReuseExclusiveCategories();
-    $qDonors = Query::getAllUniqueDonors();
     $qRecycleLocs = Query::getRecycleExclusiveLocations();
 
     // set headers
@@ -53,7 +70,6 @@ $app->get('/contact', function() use ($app) {
         'appTemplate' => 'contact.php',
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
-        'donors' => $qDonors->fetch_all(MYSQLI_ASSOC),
         'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
         'hasMap' => false,
         'cssSpecial' => array(
