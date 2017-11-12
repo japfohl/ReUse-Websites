@@ -5,4 +5,5 @@ ALTER TABLE Reuse_Locations ADD CONSTRAINT `fk_state_id` FOREIGN KEY (`state_id`
 -- @UNDO
 -- SQL to undo the change goes here.
 ALTER TABLE Reuse_Locations DROP FOREIGN KEY `fk_state_id`;
+ALTER TABLE Reuse_Locations DROP KEY `fk_state_id`;
 ALTER TABLE Reuse_Locations ADD KEY `state_id` (`state_id`);
