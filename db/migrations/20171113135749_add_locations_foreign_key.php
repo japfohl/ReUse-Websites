@@ -10,7 +10,8 @@ class AddLocationsForeignKey extends AbstractMigration {
         // get rid of the useless key
         $this->execute(
             "ALTER TABLE Reuse_Locations
-             DROP KEY state_id;");
+             DROP KEY state_id;"
+        );
 
         $this->table('Reuse_Locations')
             ->addForeignKey('state_id', 'States', 'id', [
@@ -24,9 +25,8 @@ class AddLocationsForeignKey extends AbstractMigration {
 
         // drop the foreign key
         $this->table('Reuse_Locations')
-            ->dropForeignKey('state_id', [
-                'constraint' => 'fk_state_id'
-            ])->save();
+            ->dropForeignKey('state_id')
+            ->save();
 
         // add key
         $this->execute(
