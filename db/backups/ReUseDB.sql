@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `Resource_Type` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Resource_Type`
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `Reuse_Documents` (
   `location_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `location_id` (`location_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `Reuse_Documents`
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `Reuse_Donors` (
   `Description` text NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Name` (`Name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
