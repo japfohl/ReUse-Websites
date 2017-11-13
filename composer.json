@@ -6,10 +6,11 @@
     },
     "require-dev": {
       "phpunit/phpunit": "^5.7",
-      "fzaninotto/faker": "^1.7"
-    },
-    "autoload": {
-      "files": [
+      "fzaninotto/faker": "^1.7",
+      "robmorgan/phinx": "^0.9.1"
+   },
+   "autoload": {
+     "files": [
        "src/lib/geocoder.php",
        "src/lib/reuseConnect.php",
        "src/lib/xmlGenerator.php"
@@ -20,5 +21,8 @@
        "src/test-helpers/ApiTestCase.php",
        "src/lib/Query.php"
      ]
+   },
+   "config": {
+      "bin-dir": "bin"
    }
 }

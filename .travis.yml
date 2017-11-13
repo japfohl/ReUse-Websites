@@ -6,7 +6,7 @@ php:
 before_script:
   - mysql -e "create database IF NOT EXISTS reuse_db;" -uroot
   - echo "USE mysql;\nUPDATE user SET password=PASSWORD('password') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
-  - mysql -uroot -ppassword reuse_db < resources/database/ReUseDB.sql
+  - mysql -uroot -ppassword reuse_db < db/backups/ReUseDB.sql
   - sudo apt-add-repository -y ppa:ondrej/php
   - sudo apt-get update
   - sudo apt-get install php7.0-xml php7.0-mbstring 
@@ -16,9 +16,10 @@ before_script:
   - export REUSE_DB_URL=127.0.0.1
   - export REUSE_DB_NAME=reuse_db
   - export API_ADDR=127.0.0.1:8001
+  - bin/phinx migrate -e travis
   - (cd public_html; php -S 127.0.0.1:8001 &)
   - sleep 10
 
-script: vendor/bin/phpunit --verbose tests
+script: bin/phpunit --verbose tests
 
 
