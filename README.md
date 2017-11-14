@@ -109,3 +109,4 @@ Here are links to the various tools / frameworks used for this project.
 * [PHPUnit v5.7](https://phpunit.de/)
 * [Faker - Fake Data Generator](https://github.com/fzaninotto/Faker)
 * [Using MySQL in Cloud9](https://community.c9.io/t/setting-up-mysql/1718)
+* [Phinx PHP Database Migrations](http://docs.phinx.org/en/latest/)
