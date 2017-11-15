@@ -363,12 +363,14 @@ function addDoc() {
     var doc_name = $('#docName')[0].value;
     var doc_url = $('#docURL')[0].value;
     var business_id = $('#bus_id')[0].value;
-    var tableData = "doc_name=" + doc_name + "&doc_url=" + doc_url + "&business_id=" + business_id;
+    var data = { doc_name: doc_name, doc_url: doc_url,
+                 business_id: business_id };
 
     $.ajax({
         type: "POST",
-        url: webURL + "/RUapi/addBusinessDoc",
-        data: tableData,
+        url: webURL + "/RUapi/business/document",
+        dataType: 'json',
+        data: JSON.stringify(data),
         success: function(data) {
             alert(data);
             $('#docName')[0].value = "";
