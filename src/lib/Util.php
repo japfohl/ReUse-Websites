@@ -65,4 +65,36 @@ class Util {
     public static function debug($msg) {
         file_put_contents("php://stdout", "\n$msg\n");
     }
+
+    public static function buildMapJson($locs) {
+
+        // create empty jsonArray
+        $jsonArr = array();
+
+        // loop over each thing in the array
+        foreach ($locs as $loc) {
+
+            // get the type and array lof locs
+            $locType = $loc['type'];
+            $locArr = $loc['locations'];
+
+            // append an entry
+            foreach ($locArr as $l) {
+                $jsonArr[] = [
+                    "lat" =>    Util::fetch_val('latitude', $l),
+                    "long" =>   Util::fetch_val('longitude', $l),
+                    "name" =>   Util::fetch_val('name', $l),
+                    "add" =>    Util::fetch_val('address_line_1', $l),
+                    "city" =>   Util::fetch_val('city', $l),
+                    "state"  => Util::fetch_val('abbreviation', $l),
+                    "zip" =>    Util::fetch_val('zip_code', $l),
+                    "id" =>     Util::fetch_val('id', $l),
+                    "type" =>   $locType
+                ];
+            }
+        }
+
+        // return properly
+        return json_encode($jsonArr);
+    }
 }
