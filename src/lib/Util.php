@@ -37,4 +37,32 @@ class Util {
             return $default;
         }
     }
+
+    public static function logout() {
+
+        //unset session variables
+        $_SESSION = [];
+
+        //unset cookie
+        unset($_COOKIE[session_name()]);
+
+        //destroy session
+        session_destroy();
+    }
+
+    //redirect to a valid destination in the site
+    public static function redirect($destination) {
+
+        //http://php.net/manual/en/function.header.php
+        $host = $_SERVER["HTTP_HOST"];
+        $path = rtrim(dirname($_SERVER["PHP_SELF"]), "/\\");
+        header("Location: http://$host$path/$destination");
+
+        // exit immediately since we're redirecting anyway
+        exit;
+    }
+
+    public static function debug($msg) {
+        file_put_contents("php://stdout", "\n$msg\n");
+    }
 }

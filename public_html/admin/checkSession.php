@@ -1,6 +1,6 @@
 <?php
-    if(!(isset($_SESSION['username'])) || $_SESSION['username'] == "") {
-        header( 'Location: /admin/loginPage.php' ) ;
-    }
+
+if(!(isset($_SESSION['id'])) || $_SESSION['id'] == "") {
+    header( 'Location: /admin/loginPage.php' ) ;
     exit;
-?>
+}
