@@ -1,5 +1,13 @@
 <?php
 
+function getReuseRepairRecycle() {
+    return array (
+        Query::getRepairExclusiveCategories(),
+        Query::getReuseExclusiveCategories(),
+        Query::getRecycleExclusiveLocations()
+    );
+}
+
 /**
  * GET /
  * Route for the main website page
@@ -8,12 +16,11 @@
 $app->get('/', function() use ($app) {
 
     // perform queries
-    $qDonors = Query::getAllUniqueDonors();
-    $qRecycleLocs = Query::getRecycleExclusiveLocations();
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
+
     $qRepairLocs = Query::getRepairExclusiveLocations();
     $qReuseLocs = Query::getReuseExclusiveLocations();
-    $qRepairCats = Query::getRepairExclusiveCategories();
-    $qReuseCats = Query::getReuseExclusiveCategories();
+    $qDonors = Query::getAllUniqueDonors();
 
     // set the response type
     $app->response->headers->set('Content-Type', 'text/html');
@@ -36,10 +43,8 @@ $app->get('/', function() use ($app) {
 $app->get('/about', function() use ($app) {
 
     // do queries
-    $qRepairCats = Query::getRepairExclusiveCategories();
-    $qReuseCats = Query::getReuseExclusiveCategories();
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
     $qDonors = Query::getAllUniqueDonors();
-    $qRecycleLocs = Query::getRecycleExclusiveLocations();
 
     // set headers
     $app->response->headers->set('Content-type', 'text/html');
@@ -58,9 +63,7 @@ $app->get('/about', function() use ($app) {
 $app->get('/contact', function() use ($app) {
 
     // do queries
-    $qRepairCats = Query::getRepairExclusiveCategories();
-    $qReuseCats = Query::getReuseExclusiveCategories();
-    $qRecycleLocs = Query::getRecycleExclusiveLocations();
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
 
     // set headers
     $app->response->headers->set('Content-Type', 'text/html');
@@ -77,3 +80,79 @@ $app->get('/contact', function() use ($app) {
         )
     ));
 });
+
+$app->get('/reuse', function() use ($app) {
+
+    // do queries
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
+
+    // set headers
+    $app->response->headers->set('Content-Type', 'text/html');
+
+    // render
+    $app->render('app/appBase.php', array(
+        'appTemplate' => , // TODO: SET THIS
+        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
+        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'hasMap' => true
+    ));
+});
+
+$app->get('/repair', function() use ($app) {
+
+    // do queries
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
+
+    // set headers
+    $app->response->headers->set('Content-Type', 'text/html');
+
+    // render
+    $app->render('app/appBase.php', array(
+        'appTemplate' => , // TODO: SET THIS
+        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
+        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'hasMap' => true
+    ));
+});
+
+$app->get('/recycle', function() use ($app) {
+
+    // do queries
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
+
+    // set headers
+    $app->response->headers->set('Content-Type', 'text/html');
+
+    // render
+    $app->render('app/appBase.php', array(
+        'appTemplate' => , // TODO: SET THIS
+        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
+        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'hasMap' => true
+    ));
+});
+
+/*
+
+$app->get('/template', function() use ($app) { // TODO: CHANGE ROUTE NAME
+
+    // do queries
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
+
+    // set headers
+    $app->response->headers->set('Content-Type', 'text/html');
+
+    // render
+    $app->render('app/appBase.php', array(
+        'appTemplate' => , // TODO: SET THIS
+        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
+        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'hasMap' => // TODO: SET THIS
+    ));
+});
+
+*/
