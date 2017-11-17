@@ -91,7 +91,7 @@ $app->get('/reuse', function() use ($app) {
 
     // render
     $app->render('app/appBase.php', array(
-        'appTemplate' => , // TODO: SET THIS
+        'appTemplate' => 'categoryMap.php', // TODO: SET THIS
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
         'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
@@ -109,7 +109,7 @@ $app->get('/repair', function() use ($app) {
 
     // render
     $app->render('app/appBase.php', array(
-        'appTemplate' => , // TODO: SET THIS
+        'appTemplate' => 'categoryMap.php', // TODO: SET THIS
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
         'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
@@ -127,7 +127,7 @@ $app->get('/recycle', function() use ($app) {
 
     // render
     $app->render('app/appBase.php', array(
-        'appTemplate' => , // TODO: SET THIS
+        'appTemplate' => 'locationMap.php', // TODO: SET THIS
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
         'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
