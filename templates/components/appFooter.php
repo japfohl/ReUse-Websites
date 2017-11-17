@@ -27,7 +27,7 @@
 	    <!-- Inject map stuff if needed -->
         <script src="js/mapFunct.js" type="text/javascript"></script>
         <script defer
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiF8JALjnfAymACLHqPAhlrLlUj3y9DTo&callback=<?php echo $this->data['mapCallback']; ?>">
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiF8JALjnfAymACLHqPAhlrLlUj3y9DTo&callback=initJsonMap">
         </script>
     <?php endif; ?>
 

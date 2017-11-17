@@ -34,9 +34,7 @@ $app->get('/', function() use ($app) {
         'reuseLocs' => $qReuseLocs->fetch_all(MYSQLI_ASSOC),
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
-        'hasMap' => true,
-        'mapCallback' => 'initIndexMap',
-        'preJsSpecial' => array('js/home.js')
+        'hasMap' => true
     ));
 });
 
@@ -81,39 +79,53 @@ $app->get('/contact', function() use ($app) {
     ));
 });
 
-$app->get('/reuse', function() use ($app) {
-
-    // do queries
-    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
-
-    // set headers
-    $app->response->headers->set('Content-Type', 'text/html');
-
-    // render
-    $app->render('app/appBase.php', array(
-        'appTemplate' => 'categoryMap.php', // TODO: SET THIS
-        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
-        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
-        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
-        'hasMap' => true
-    ));
-});
-
 $app->get('/repair', function() use ($app) {
 
     // do queries
     list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
+    $qRepairLocs = Query::getRepairExclusiveLocations();
 
     // set headers
     $app->response->headers->set('Content-Type', 'text/html');
 
     // render
     $app->render('app/appBase.php', array(
-        'appTemplate' => 'categoryMap.php', // TODO: SET THIS
+        'appTemplate' => 'itemMap.php',
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
         'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'mapLocs' => array(
+            array(
+                'type' => 'repair',
+                'locations' => $qRepairLocs->fetch_all(MYSQLI_ASSOC)
+            )
+        ),
         'hasMap' => true
+    ));
+});
+
+$app->get('/reuse', function() use ($app) {
+
+    // do queries
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
+    $qReuseLocs = Query::getReuseExclusiveLocations();
+
+    // set headers
+    $app->response->headers->set('Content-Type', 'text/html');
+
+    // render
+    $app->render('app/appBase.php', array(
+        'appTemplate' => 'itemMap.php',
+        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
+        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'hasMap' => true,
+        'mapLocs' => array(
+            array(
+                'type' => 'reuse',
+                'locations' => $qReuseLocs->fetch_all(MYSQLI_ASSOC)
+            )
+        )
     ));
 });
 
@@ -127,7 +139,7 @@ $app->get('/recycle', function() use ($app) {
 
     // render
     $app->render('app/appBase.php', array(
-        'appTemplate' => 'locationMap.php', // TODO: SET THIS
+        'appTemplate' => 'locationMap.php',
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
         'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),

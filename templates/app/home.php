@@ -1,55 +1,20 @@
 <?php
 
-// create new array to store map location data in
-$mapLocs = array();
-
-// append recycle locations
-foreach ($this->data['recycleLocs'] as $r) {
-    $mapLocs[] = [
-        "lat" =>    Util::fetch_val('latitude', $r),
-        "long" =>   Util::fetch_val('longitude', $r),
-        "name" =>   Util::fetch_val('name', $r),
-        "add" =>    Util::fetch_val('address_line_1', $r),
-        "city" =>   Util::fetch_val('city', $r),
-        "state"  => Util::fetch_val('abbreviation', $r),
-        "zip" =>    Util::fetch_val('zip_code', $r),
-        "id" =>     Util::fetch_val('id', $r),
-        "type" =>   "recycle"
-    ];
-}
-
-// append repair locations
-foreach ($this->data['repairLocs'] as $r) {
-    $mapLocs[] = [
-        "lat" =>    Util::fetch_val('latitude', $r),
-        "long" =>   Util::fetch_val('longitude', $r),
-        "name" =>   Util::fetch_val('name', $r),
-        "add" =>    Util::fetch_val('address_line_1', $r),
-        "city" =>   Util::fetch_val('city', $r),
-        "state"  => Util::fetch_val('abbreviation', $r),
-        "zip" =>    Util::fetch_val('zip_code', $r),
-        "id" =>     Util::fetch_val('id', $r),
-        "type" =>   "repair"
-    ];
-}
-
-// append reuse locaitons
-foreach ($this->data['reuseLocs'] as $r) {
-    $mapLocs[] = [
-        "lat" =>    Util::fetch_val('latitude', $r),
-        "long" =>   Util::fetch_val('longitude', $r),
-        "name" =>   Util::fetch_val('name', $r),
-        "add" =>    Util::fetch_val('address_line_1', $r),
-        "city" =>   Util::fetch_val('city', $r),
-        "state"  => Util::fetch_val('abbreviation', $r),
-        "zip" =>    Util::fetch_val('zip_code', $r),
-        "id" =>     Util::fetch_val('id', $r),
-        "type" =>   "reuse"
-    ];
-}
-
 // save array as json
-$mapJson = json_encode($mapLocs);
+$mapJson = Util::buildMapJson(array(
+    array(
+        'type' => 'repair',
+        'locations' => $this->data['repairLocs']
+    ),
+    array(
+        'type' => 'reuse',
+        'locations' => $this->data['reuseLocs']
+    ),
+    array(
+        'type' => 'recycle',
+        'locations' => $this->data['recycleLocs']
+    )
+));
 
 ?>
     <div class="home-map-container">
