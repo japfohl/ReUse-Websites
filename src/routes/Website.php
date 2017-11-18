@@ -100,7 +100,8 @@ $app->get('/repair', function() use ($app) {
                 'locations' => $qRepairLocs->fetch_all(MYSQLI_ASSOC)
             )
         ),
-        'hasMap' => true
+        'hasMap' => true,
+        'sideListTitle' => 'Organizations Repairing'
     ));
 });
 
@@ -109,6 +110,7 @@ $app->get('/reuse', function() use ($app) {
     // do queries
     list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
     $qReuseLocs = Query::getReuseExclusiveLocations();
+    $qItemsCounts = Query::getExclusiveReuseItemsCounts();
 
     // set headers
     $app->response->headers->set('Content-Type', 'text/html');
@@ -119,13 +121,15 @@ $app->get('/reuse', function() use ($app) {
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
         'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'itemsCounts' => $qItemsCounts->fetch_all(MYSQLI_ASSOC),
         'hasMap' => true,
         'mapLocs' => array(
             array(
                 'type' => 'reuse',
                 'locations' => $qReuseLocs->fetch_all(MYSQLI_ASSOC)
             )
-        )
+        ),
+        'sideListTitle' => 'Items Accepted'
     ));
 });
 
@@ -143,7 +147,8 @@ $app->get('/recycle', function() use ($app) {
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
         'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
-        'hasMap' => true
+        'hasMap' => true,
+        'sideListTitle' => 'Organizations Accepting Recycle'
     ));
 });
 

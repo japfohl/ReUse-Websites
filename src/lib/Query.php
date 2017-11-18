@@ -19,13 +19,13 @@ class Query {
 
         $db	 = connectReuseDB();
         return $db->query(
-            "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation, loc.phone, 
-                             loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude 
-             FROM Reuse_Locations AS loc 
-             LEFT JOIN States AS state ON state.id = loc.state_id 
-             INNER JOIN Reuse_Locations_Items AS loc_item ON loc.id = loc_item.location_id 
-             INNER JOIN Reuse_Items AS item ON loc_item.item_id = item.id 
-             INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id 
+            "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation, loc.phone,
+                             loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude
+             FROM Reuse_Locations AS loc
+             LEFT JOIN States AS state ON state.id = loc.state_id
+             INNER JOIN Reuse_Locations_Items AS loc_item ON loc.id = loc_item.location_id
+             INNER JOIN Reuse_Items AS item ON loc_item.item_id = item.id
+             INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id
              WHERE loc.recycle <> 1 AND loc_item.Type = 1;"
         );
     }
@@ -33,12 +33,12 @@ class Query {
     public static function getReuseExclusiveLocations() {
         $db = connectReuseDB();
         return $db->query(
-            "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation, 
-                           loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude 
-             FROM Reuse_Locations AS loc LEFT JOIN States AS state ON state.id = loc.state_id 
-             INNER JOIN Reuse_Locations_Items AS loc_item ON loc.id = loc_item.location_id 
-             INNER JOIN Reuse_Items AS item ON loc_item.item_id = item.id 
-             INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id 
+            "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation,
+                           loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude
+             FROM Reuse_Locations AS loc LEFT JOIN States AS state ON state.id = loc.state_id
+             INNER JOIN Reuse_Locations_Items AS loc_item ON loc.id = loc_item.location_id
+             INNER JOIN Reuse_Items AS item ON loc_item.item_id = item.id
+             INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id
              WHERE cat.name NOT IN ('Repair', 'Repair Items', 'Recycle') AND loc.recycle <> 1 AND loc_item.Type = 0;"
         );
     }
@@ -46,10 +46,10 @@ class Query {
     public static function getRecycleExclusiveLocations() {
         $db = connectReuseDB();
         return $db->query(
-            "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation, 
-                          loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude 
-             FROM Reuse_Locations AS loc 
-             LEFT JOIN States AS state ON state.id = loc.state_id 
+            "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation,
+                          loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude
+             FROM Reuse_Locations AS loc
+             LEFT JOIN States AS state ON state.id = loc.state_id
              WHERE loc.recycle = 1;"
         );
     }
@@ -75,6 +75,19 @@ class Query {
              JOIN Reuse_Categories c ON i.category_id = c.id
              WHERE l.Type = 0
              ORDER BY c.name ASC"
+        );
+    }
+
+    public static function getExclusiveReuseItemsCounts() {
+        $db = connectReuseDB();
+        return $db->query(
+            "SELECT DISTINCT item.name, COUNT(loc_item.location_id) AS item_count
+             FROM Reuse_Items AS item
+             INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id
+             INNER JOIN Reuse_Locations_Items AS loc_item ON item.id = loc_item.item_id
+             WHERE cat.name NOT IN ('Repair', 'Repair Items', 'Recycle') AND loc_item.Type = 0
+             GROUP BY (item.name)
+             ORDER BY item.name"
         );
     }
 }
