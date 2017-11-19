@@ -48,7 +48,7 @@
                 </form>
                 <ul class="nav nav-pills pull-right">
                     <li role="presentation" class="dropdown header-button">
-                        <a href="/repair" class="dropbtn header-link">
+                        <a href="/items?type=repair" class="dropbtn header-link">
                             Repair <span class="caret"></span>
                         </a>
                         <div class="dropdown-content" id="header-repair-links">
@@ -60,7 +60,7 @@
                         </div>
                     </li>
                     <li role="presentation" class="dropdown header-button">
-                        <a href="/reuse" class="dropbtn header-link">
+                        <a href="/items?type=reuse" class="dropbtn header-link">
                             Reuse <span class="caret"></span>
                         </a>
                         <div class="dropdown-content" id="header-reuse-links">

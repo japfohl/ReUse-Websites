@@ -78,7 +78,7 @@ class Query {
         );
     }
 
-    public static function getExclusiveReuseItemsCounts() {
+    public static function getReuseExclusiveItemsCounts() {
         $db = connectReuseDB();
         return $db->query(
             "SELECT DISTINCT item.name, COUNT(loc_item.location_id) AS item_count
@@ -86,6 +86,19 @@ class Query {
              INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id
              INNER JOIN Reuse_Locations_Items AS loc_item ON item.id = loc_item.item_id
              WHERE cat.name NOT IN ('Repair', 'Repair Items', 'Recycle') AND loc_item.Type = 0
+             GROUP BY (item.name)
+             ORDER BY item.name"
+        );
+    }
+
+    public static function getRepairExclusiveItemsCount() {
+        $db = connectReuseDB();
+        return $db->query(
+            "SELECT DISTINCT item.name, COUNT(loc_item.location_id) AS item_count
+             FROM Reuse_Items AS item
+             INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id
+             INNER JOIN Reuse_Locations_Items AS loc_item ON item.id = loc_item.item_id
+             WHERE loc_item.Type = 1
              GROUP BY (item.name)
              ORDER BY item.name"
         );
