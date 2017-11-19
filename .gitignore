@@ -5,3 +5,5 @@ vendor/
 *.DS_Store*
 *.php_cs.cache
 App/Lib/BingGeocoder/bingApiKey.php
+public_html/xml/myxml.xml
+public_html/xml/reuse_database.xml
