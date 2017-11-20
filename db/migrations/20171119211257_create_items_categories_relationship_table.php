@@ -8,31 +8,39 @@ class CreateItemsCategoriesRelationshipTable extends AbstractMigration
 {
     public function up()
     {
-        // create the table for the relationship
-        $this->table('Reuse_Items_Categories')
-            ->addColumn('item_id', 'integer')
-            ->addColumn('category_id', 'integer')
-            ->addForeignKey('item_id', 'Reuse_Items', 'id', [
-                'delete' => 'CASCADE',
-                'update' => 'NO_ACTION',
-                'constraint' => 'fk_rel_item_id'])
-            ->addForeignKey('category_id', 'Reuse_Categories', 'id', [
-                'delete' => 'CASCADE',
-                'update' => 'NO_ACTION',
-                'constraint' => 'fk_rel_category_id'
-            ])
+        // get the tables being modified
+        $locItems = $this->table('Reuse_Locations_Items');
+        $type = $this->table('Resource_Type');
+        $items = $this->table('Reuse_Items');
+        $cats = $this->table('Reuse_Categories');
+
+        // drop the foreign keys
+        $locItems->dropForeignKey('item_id')
+            ->save();
+
+        $items->dropForeignKey('category_id')
             ->save();
     }
 
     public function down()
     {
-        // drop the fk constraints
-        $this->table('Reuse_Items_Categories')
-            ->dropForeignKey('item_id')
-            ->dropForeignKey('category_id')
-            ->save();
+        // get the tables being modified
+        $locItems = $this->table('Reuse_Locations_Items');
+        $type = $this->table('Resource_Type');
+        $items = $this->table('Reuse_Items');
+        $cats = $this->table('Reuse_Categories');
 
-        // drop the table
-        $this->dropTable('Reuse_Items_Categories');
+        // restore the foreign keys
+        $locItems->addForeignKey('item_id', 'Reuse_Items', 'id', [
+            'delete' => 'CASCADE',
+            'update' => 'NO_ACTION',
+            'constraint' => 'fk_item_id'
+        ])->save();
+
+        $items->addForeignKey('category_id', 'Reuse_Categories', 'id', [
+            'delete' => 'CASCADE',
+            'update' => 'NO_ACTION',
+            'constraint' => 'fk_category_id'
+        ])->save();
     }
 }
