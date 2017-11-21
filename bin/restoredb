@@ -1,0 +1,2 @@
+#!/bin/bash
+mysql reuse < db/backups/11202017_Reuse_Backup.sql -uroot -p$REUSE_DB_PW
