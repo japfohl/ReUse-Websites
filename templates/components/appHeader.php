@@ -53,7 +53,7 @@
                         </a>
                         <div class="dropdown-content" id="header-repair-links">
                         <?php foreach ($this->data['repairCats'] as $r): ?>
-                            <a href="category.php?type=repair&name=<?php echo rawurlencode($r['name']); ?>">
+                            <a href="/items?type=repair&cat=<?php echo rawurlencode($r['id']); ?>">
                                 <?php echo $r['name']; ?>
                             </a>
                         <?php endforeach; ?>
@@ -65,7 +65,7 @@
                         </a>
                         <div class="dropdown-content" id="header-reuse-links">
                         <?php foreach ($this->data['reuseCats'] as $r): ?>
-                            <a href="category.php?type=reuse&name=<?php echo rawurlencode($r['name']); ?>">
+                            <a href="/items?type=reuse&cat=<?php echo rawurlencode($r['id']); ?>">
                                 <?php echo $r['name']; ?>
                             </a>
                         <?php endforeach; ?>

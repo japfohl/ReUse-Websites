@@ -83,22 +83,33 @@ $app->get('/items', function() use ($app) {
 
     // get the type
     $itemType = strtolower($app->request->get('type'));
+    $catId = $app->request->get('cat');
 
     // must provide the item type
     if ($itemType === null) {
         $app->redirect('/');
     }
 
+    // validate catId
+    if ($catId !== null) {
+        $catId = connectReuseDB()->real_escape_string($catId);
+        if (ctype_digit($catId)) {
+            $catId = (int)$catId;
+        } else {
+            $catId = null;
+        }
+    }
+
     $qLocs = $sideTitle = $qItemsCounts = null;
 
     // perform locs query based on type
     if ($itemType == 'repair') {
-        $qLocs = Query::getRepairExclusiveLocations();
-        $qItemsCounts = Query::getRepairExclusiveItemsCount();
+        $qLocs = Query::getRepairExclusiveLocations($catId);
+        $qItemsCounts = Query::getRepairExclusiveItemsCount($catId);
         $sideTitle = 'Organizations Repairing';
     } else if ($itemType == 'reuse') {
-        $qLocs = Query::getReuseExclusiveLocations();
-        $qItemsCounts = Query::getReuseExclusiveItemsCounts();
+        $qLocs = Query::getReuseExclusiveLocations($catId);
+        $qItemsCounts = Query::getReuseExclusiveItemsCounts($catId);
         $sideTitle = 'Items Accepted';
     } else {
         $app->redirect('/');    // only current valid types are repair and reuse
@@ -125,79 +136,6 @@ $app->get('/items', function() use ($app) {
             )
         ),
         'sideListTitle' => $sideTitle
-    ));
-});
-
-$app->get('/repair', function() use ($app) {
-
-    // do queries
-    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
-    $qRepairLocs = Query::getRepairExclusiveLocations();
-
-    // set headers
-    $app->response->headers->set('Content-Type', 'text/html');
-
-    // render
-    $app->render('app/appBase.php', array(
-        'appTemplate' => 'itemMap.php',
-        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
-        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
-        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
-        'mapLocs' => array(
-            array(
-                'type' => 'repair',
-                'locations' => $qRepairLocs->fetch_all(MYSQLI_ASSOC)
-            )
-        ),
-        'hasMap' => true,
-        'sideListTitle' => 'Organizations Repairing'
-    ));
-});
-
-$app->get('/reuse', function() use ($app) {
-
-    // do queries
-    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
-    $qReuseLocs = Query::getReuseExclusiveLocations();
-    $qItemsCounts = Query::getReuseExclusiveItemsCounts();
-
-    // set headers
-    $app->response->headers->set('Content-Type', 'text/html');
-
-    // render
-    $app->render('app/appBase.php', array(
-        'appTemplate' => 'itemMap.php',
-        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
-        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
-        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
-        'itemsCounts' => $qItemsCounts->fetch_all(MYSQLI_ASSOC),
-        'hasMap' => true,
-        'mapLocs' => array(
-            array(
-                'type' => 'reuse',
-                'locations' => $qReuseLocs->fetch_all(MYSQLI_ASSOC)
-            )
-        ),
-        'sideListTitle' => 'Items Accepted'
-    ));
-});
-
-$app->get('/recycle', function() use ($app) {
-
-    // do queries
-    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
-
-    // set headers
-    $app->response->headers->set('Content-Type', 'text/html');
-
-    // render
-    $app->render('app/appBase.php', array(
-        'appTemplate' => 'locationMap.php',
-        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
-        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
-        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
-        'hasMap' => true,
-        'sideListTitle' => 'Organizations Accepting Recycle'
     ));
 });
 
