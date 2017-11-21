@@ -48,31 +48,31 @@
                 </form>
                 <ul class="nav nav-pills pull-right">
                     <li role="presentation" class="dropdown header-button">
-                        <a href="/items?type=repair" class="dropbtn header-link">
+                        <a href="/items?type=1" class="dropbtn header-link">
                             Repair <span class="caret"></span>
                         </a>
                         <div class="dropdown-content" id="header-repair-links">
                         <?php foreach ($this->data['repairCats'] as $r): ?>
-                            <a href="/items?type=repair&cat=<?php echo rawurlencode($r['id']); ?>">
+                            <a href="/items?type=1&category=<?php echo rawurlencode($r['id']); ?>">
                                 <?php echo $r['name']; ?>
                             </a>
                         <?php endforeach; ?>
                         </div>
                     </li>
                     <li role="presentation" class="dropdown header-button">
-                        <a href="/items?type=reuse" class="dropbtn header-link">
+                        <a href="/items?type=0" class="dropbtn header-link">
                             Reuse <span class="caret"></span>
                         </a>
                         <div class="dropdown-content" id="header-reuse-links">
                         <?php foreach ($this->data['reuseCats'] as $r): ?>
-                            <a href="/items?type=reuse&cat=<?php echo rawurlencode($r['id']); ?>">
+                            <a href="/items?type=0&category=<?php echo rawurlencode($r['id']); ?>">
                                 <?php echo $r['name']; ?>
                             </a>
                         <?php endforeach; ?>
                         </div>
                     </li>
                     <li role="presentation" class="dropdown header-button">
-                        <a href="/recycle" class="dropbtn header-link">
+                        <a href="/locations?type=2" class="dropbtn header-link">
                             Recycle <span class="caret"></span>
                         </a>
                         <div class="dropdown-content" id="header-recycle-links">

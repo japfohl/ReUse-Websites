@@ -3,15 +3,15 @@
 // save array as json
 $mapJson = Util::buildMapJson(array(
     array(
-        'type' => 'repair',
+        'type' => 1,
         'locations' => $this->data['repairLocs']
     ),
     array(
-        'type' => 'reuse',
+        'type' => 0,
         'locations' => $this->data['reuseLocs']
     ),
     array(
-        'type' => 'recycle',
+        'type' => 2,
         'locations' => $this->data['recycleLocs']
     )
 ));

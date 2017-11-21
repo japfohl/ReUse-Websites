@@ -18,8 +18,8 @@ $app->get('/', function() use ($app) {
     // perform queries
     list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
 
-    $qRepairLocs = Query::getRepairExclusiveLocations();
-    $qReuseLocs = Query::getReuseExclusiveLocations();
+    $qRepairLocs = Query::getLocations(1);
+    $qReuseLocs = Query::getLocations(0);
     $qDonors = Query::getAllUniqueDonors();
 
     // set the response type
@@ -81,16 +81,21 @@ $app->get('/contact', function() use ($app) {
 
 $app->get('/items', function() use ($app) {
 
-    // get the type
+    // get, validate, and parse type
     $itemType = strtolower($app->request->get('type'));
-    $catId = $app->request->get('cat');
-
-    // must provide the item type
     if ($itemType === null) {
         $app->redirect('/');
+    } else {
+        $itemType = connectReuseDB()->real_escape_string($itemType);
+        if (ctype_digit($itemType)) {
+            $itemType = (int)$itemType;
+        } else {
+            $app->redirect("/");
+        }
     }
 
-    // validate catId
+    // get, validate, and parse category
+    $catId = $app->request->get('cat');
     if ($catId !== null) {
         $catId = connectReuseDB()->real_escape_string($catId);
         if (ctype_digit($catId)) {
@@ -100,20 +105,19 @@ $app->get('/items', function() use ($app) {
         }
     }
 
-    $qLocs = $sideTitle = $qItemsCounts = null;
+    $sideTitle = null;
 
-    // perform locs query based on type
-    if ($itemType == 'repair') {
-        $qLocs = Query::getRepairExclusiveLocations($catId);
-        $qItemsCounts = Query::getRepairExclusiveItemsCount($catId);
+    // set title of side container based on type
+    if ($itemType === 1) {
         $sideTitle = 'Organizations Repairing';
-    } else if ($itemType == 'reuse') {
-        $qLocs = Query::getReuseExclusiveLocations($catId);
-        $qItemsCounts = Query::getReuseExclusiveItemsCounts($catId);
+    } else if ($itemType === 0) {
         $sideTitle = 'Items Accepted';
     } else {
         $app->redirect('/');    // only current valid types are repair and reuse
     }
+
+    $qLocs = Query::getLocations($itemType, $catId);
+    $qItemsCounts = Query::getItemsCounts($itemType, $catId);
 
     // get page header required stuff
     list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
@@ -122,21 +126,23 @@ $app->get('/items', function() use ($app) {
     $app->response->headers->set('Content-Type', 'text/html');
 
     // render
-    $app->render('app/appBase.php', array(
+    $app->render('app/appBase.php', [
         'appTemplate' => 'itemMap.php',
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
         'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
         'itemsCounts' => $qItemsCounts->fetch_all(MYSQLI_ASSOC),
         'hasMap' => true,
-        'mapLocs' => array(
-            array(
+        'mapLocs' => [
+            [
                 'type' => $itemType,
                 'locations' => $qLocs->fetch_all(MYSQLI_ASSOC)
-            )
-        ),
-        'sideListTitle' => $sideTitle
-    ));
+            ]
+        ],
+        'sideListTitle' => $sideTitle,
+        'showItemCats' => $catId === null ? true : false,
+        'itemType' => $itemType
+    ]);
 });
 
 /*

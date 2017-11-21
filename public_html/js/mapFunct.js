@@ -429,9 +429,9 @@ function initJsonMap() {
 
     // object to map pin colors to location type
     var pincolors = {
-        "recycle": "7C903A",
-        "repair": "47A6B2",
-        "reuse": "F89420"
+        2: "7C903A",
+        1: "47A6B2",
+        0: "F89420"
     };
 
     // add data to the map
