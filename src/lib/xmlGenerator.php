@@ -7,7 +7,7 @@
  */
 
 // the XML representation of the ReUse database
-define('XML_FILENAME',  __DIR__ . "/../../public_html/xml/reuse_database.xml");
+define('XML_FILENAME', __DIR__ . "/../xml/reuse_database.xml");
 
 /* Escape problem characters in XML ( '<', '>', '&', ''', '"' ) */
 function escapeSpecial($str) {

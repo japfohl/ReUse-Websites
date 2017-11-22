@@ -101,12 +101,27 @@ public_html $ php -S localhost:8001
 
 Where 8001 can be any unused port number.
 
+### Processing CSS
+
+* To process and minify the existing CSS (_and thereby reduce the number of requests a given page generates_), run the
+following while in the project root:
+
+```bash
+$ php bin/mincss.php
+```
+
+* Also, any time you make changes to the CSS, you'll need to rerun the above command.
+* This will output two files, `public_html/css/app.css` and `public_html/css/app_with_map.css` which will be dynamically
+included based on whether a given page has or does not have a map.
+* For more information see the [documentation](https://github.com/matthiasmullie/minify).
+
 ### Documentation
 
-Here are links to the various tools / frameworks used for this project.
+Here are links to documentation for the various tools / frameworks used for this project.
 * [Slim Framework v2](http://docs.slimframework.com/)
 * [Guzzle HTTP Client](http://docs.guzzlephp.org/en/stable/)
 * [PHPUnit v5.7](https://phpunit.de/)
 * [Faker - Fake Data Generator](https://github.com/fzaninotto/Faker)
 * [Using MySQL in Cloud9](https://community.c9.io/t/setting-up-mysql/1718)
 * [Phinx PHP Database Migrations](http://docs.phinx.org/en/latest/)
+* [Minify](https://github.com/matthiasmullie/minify)
