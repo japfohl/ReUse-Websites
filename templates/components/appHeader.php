@@ -17,8 +17,6 @@
 		  crossorigin="anonymous">
 	<link rel="stylesheet"
 		  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href="/css/jumbotron-narrow.css" rel="stylesheet">
-	<link href="/css/publicSite.css" rel="stylesheet">
 
     <?php if ($this->data['cssSpecial']): ?>
         <?php foreach ($this->data['cssSpecial'] as $css): ?>
@@ -28,8 +26,9 @@
     <?php endif; ?>
 
     <?php if ($this->data['hasMap']): ?>
-        <!--  Include map styles when there is a map  -->
-	    <link href="/css/map.css" rel="stylesheet">
+	    <link href="/css/app_with_map.css" rel="stylesheet">
+    <?php else: ?>
+        <link rel="stylesheet" href="/css/app.css">
     <?php endif; ?>
 
 </head>
