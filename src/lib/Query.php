@@ -194,4 +194,31 @@ class Query {
             'recycle' => Query::getItemsForLocationByType($locId, 2)->fetch_all(MYSQLI_ASSOC)
         ];
     }
+
+    public static function searchForLocationsByTerm($searchTerm) {
+        return connectReuseDB()->query(
+            "SELECT DISTINCT
+               loc.id,
+               loc.name,
+               loc.address_line_1,
+               loc.address_line_2,
+               loc.city,
+               States.abbreviation,
+               loc.zip_code,
+               loc.phone,
+               loc.website,
+               loc.latitude,
+               loc.longitude
+             FROM Reuse_Locations loc
+               INNER JOIN Reuse_Locations_Items rla ON loc.id = rla.location_id
+               INNER JOIN Reuse_Items item ON rla.item_id = item.id
+               INNER JOIN Reuse_Categories cat ON item.category_id = cat.id
+               LEFT JOIN States ON States.id = loc.state_id
+             WHERE
+             (item.name LIKE '%$searchTerm%') OR
+               (loc.name LIKE '%$searchTerm%') OR
+               (cat.name LIKE '%$searchTerm%')
+             ORDER BY loc.name ASC;"
+        );
+    }
 }

@@ -265,3 +265,51 @@ $app->get('/location/:id', function($id) use ($app) {
         ]
     ));
 });
+
+$app->get('/search', function() use ($app) {
+
+    // get and escape search term
+    $searchTerm = $app->request->get('q');
+    if ($searchTerm === null) {
+        $app->redirect('/');
+    } else {
+        $searchTerm = connectReuseDB()->real_escape_string($searchTerm);
+    }
+
+    // do header queries
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
+
+    // get search results
+    $results = Query::searchForLocationsByTerm($searchTerm)->fetch_all(MYSQLI_ASSOC);
+
+    // set the side bar title
+    if (count($results) == 0) {
+        $title = "No results found for " . $searchTerm;
+        $hasMap = false;
+    } else {
+        $title = "Results for " . $searchTerm;
+        $hasMap = true;
+    }
+
+    // set headers
+    $app->response->headers->set('Content-Type', 'text/html');
+
+    // render
+    $app->render('app/appBase.php', array(
+        'appTemplate' => 'locationListMap.php',
+        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
+        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'hasMap' => $hasMap,
+        'locations' => [
+            [
+                'type' => 0,
+                'locations' => $results
+            ]
+        ],
+        'sideListTitle' => $title,
+        'cssSpecial' => array(
+            "https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css"
+        )
+    ));
+});

@@ -37,9 +37,9 @@
     <div class="container">
         <div class="header clearfix">
             <nav>
-                <form action="searchPage.php" method="GET">
+                <form action="/search" method="GET">
                     <div class="input-group" style="width:250px">
-                        <input id="searchTerm" type="text" class="form-control" placeholder="Search" name="term"/>
+                        <input id="searchTerm" type="text" class="form-control" placeholder="Search" name="q"/>
                         <span class="input-group-addon">
                             <i class="fa fa-search"></i>
                         </span>
