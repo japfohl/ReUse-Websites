@@ -15,13 +15,29 @@ class Query {
         return $db->query("SELECT DISTINCT * FROM Reuse_Donors ORDER BY name;");
     }
 
-    public static function getLocations($locType, $catId = null) {
+    public static function getLocations($locType, $args = []) {
+
+        // TODO: this does not work for Recycle locations because no recycle location is related to another item.
+        // to recycle is just a designation on a location, despite the fact that the Resource_Type table has a field
+        // call "recycle"
+
+        // tack on default values and extract variables
+        $args += [
+            'catId' => null,
+            'itemId' => null
+        ];
+        extract($args);
 
         // get the db connection
         $db = connectReuseDB();
 
+        /*
+            NOTE: If you're using and IDE, you might get errors / hinding indicating catId and itemId are invalid
+            but they get extracted out of $args.  This is the only way, currently, in PHP to do named arguments.
+        */
+
         // return the query results
-        if ($catId === null) {
+        if ($catId === null && $itemId === null) {
             return $db->query(
                 "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation,
                     loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude
@@ -33,16 +49,40 @@ class Query {
                  WHERE loc_item.Type = $locType
                  ORDER BY loc.name;"
             );
+        } else if ($itemId === null) {
+            return $db->query(
+                "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation,
+                    loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude
+                 FROM Reuse_Locations AS loc
+                 LEFT JOIN States AS state ON state.id = loc.state_id
+                 INNER JOIN Reuse_Locations_Items AS loc_item ON loc.id = loc_item.location_id
+                 INNER JOIN Reuse_Items AS item ON loc_item.item_id = item.id
+                 INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id
+                 WHERE cat.id = $catId AND loc_item.Type = $locType
+                 ORDER BY loc.name"
+            );
+        } else if ($catId === null) {
+            return $db->query(
+                "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation,
+                    loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude
+                 FROM Reuse_Locations AS loc
+                 LEFT JOIN States AS state ON state.id = loc.state_id
+                 INNER JOIN Reuse_Locations_Items AS loc_item ON loc.id = loc_item.location_id
+                 INNER JOIN Reuse_Items AS item ON loc_item.item_id = item.id
+                 INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id
+                 WHERE item.id = $itemId AND loc_item.Type = $locType
+                 ORDER BY loc.name"
+            );
         } else {
             return $db->query(
-                "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation, 
-                    loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude 
-                 FROM Reuse_Locations AS loc 
-                 LEFT JOIN States AS state ON state.id = loc.state_id 
-                 INNER JOIN Reuse_Locations_Items AS loc_item ON loc.id = loc_item.location_id 
-                 INNER JOIN Reuse_Items AS item ON loc_item.item_id = item.id 
-                 INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id 
-                 WHERE cat.id = $catId AND loc_item.Type = $locType 
+                "SELECT DISTINCT loc.name, loc.id, loc.address_line_1, loc.address_line_2, state.abbreviation,
+                    loc.phone, loc.website, loc.city, loc.zip_code, loc.latitude, loc.longitude
+                 FROM Reuse_Locations AS loc
+                 LEFT JOIN States AS state ON state.id = loc.state_id
+                 INNER JOIN Reuse_Locations_Items AS loc_item ON loc.id = loc_item.location_id
+                 INNER JOIN Reuse_Items AS item ON loc_item.item_id = item.id
+                 INNER JOIN Reuse_Categories AS cat ON item.category_id = cat.id
+                 WHERE cat.id = $catId AND item.id = $itemId AND loc_item.Type = $locType
                  ORDER BY loc.name"
             );
         }
@@ -110,5 +150,17 @@ class Query {
                  ORDER BY item.name"
             );
         }
+    }
+
+    public static function getTypeNameById($typeId) {
+        return connectReuseDB()->query(
+            "SELECT name FROM Resource_Type WHERE id = $typeId"
+        );
+    }
+
+    public static function getItemNameById($itemId) {
+        return connectReuseDB()->query(
+            "SELECT name FROM Reuse_Items WHERE id = $itemId"
+        );
     }
 }

@@ -95,7 +95,7 @@ $app->get('/items', function() use ($app) {
     }
 
     // get, validate, and parse category
-    $catId = $app->request->get('cat');
+    $catId = $app->request->get('category');
     if ($catId !== null) {
         $catId = connectReuseDB()->real_escape_string($catId);
         if (ctype_digit($catId)) {
@@ -116,7 +116,7 @@ $app->get('/items', function() use ($app) {
         $app->redirect('/');    // only current valid types are repair and reuse
     }
 
-    $qLocs = Query::getLocations($itemType, $catId);
+    $qLocs = Query::getLocations($itemType, ['catId' => $catId]);
     $qItemsCounts = Query::getItemsCounts($itemType, $catId);
 
     // get page header required stuff
@@ -143,6 +143,94 @@ $app->get('/items', function() use ($app) {
         'showItemCats' => $catId === null ? true : false,
         'itemType' => $itemType
     ]);
+});
+
+$app->get('/locations', function() use ($app) {
+
+    // get, validate, and parse type
+    $type = strtolower($app->request->get('type'));
+    if ($type === null) {
+        $app->redirect("/");
+    } else {
+        $type = connectReuseDB()->real_escape_string($type);
+        if (ctype_digit($type)) {
+            $type = (int)$type;
+        } else {
+            $app->redirect("/");
+        }
+    }
+
+    // get, validate, and parse category
+    $category = strtolower($app->request->get('category'));
+    if ($category !== null) {
+        $category = connectReuseDB()->real_escape_string($category);
+        if (ctype_digit($category)) {
+            $category = (int)$category;
+        } else {
+            $category = null;
+        }
+    }
+
+    // get, validate, and parse item
+    $item = strtolower($app->request->get('item'));
+    if ($item !== null) {
+        $item = connectReuseDB()->real_escape_string($item);
+        if (ctype_digit($item)) {
+            $item = (int)$item;
+        } else {
+            $item = null;
+        }
+    }
+
+    // create the side container title
+    $title = "Locations";
+
+    if ($item === null && $category === null) {
+        $getType = Query::getTypeNameById($type)->fetch_row();
+        if (count($getType) != 0) {
+            $title = ucfirst(strtolower($getType[0])) . " Locations";
+        }
+    } else {
+        // TODO: make this a bit more dynamic.  Possibley indicate how the locaiton relates to the item in the title
+        $getItem = Query::getItemNameById($item)->fetch_row();
+        $title = "Organizations Accepting " . ucfirst(strtolower($getItem[0]));
+    }
+
+    // do header queries
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
+
+    // TODO: get rid of this next check once the database makes use of the Resource_Type field for recycle items
+    if ($type != 2) {
+        // query for the locations matching the parameters
+        $qLocs = Query::getLocations($type, [
+            'catId' => $category,
+            'itemId' => $item
+        ]);
+    } else {
+        $qLocs = Query::getRecycleExclusiveLocations();
+    }
+
+    // set headers
+    $app->response->headers->set('Content-Type', 'text/html');
+
+    // render
+    $app->render('app/appBase.php', array(
+        'appTemplate' => 'locationMap.php',
+        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
+        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'hasMap' => true,
+        'locations' => [
+            [
+                'type' => $type,
+                'locations' => $qLocs->fetch_all(MYSQLI_ASSOC)
+            ]
+        ],
+        'sideListTitle' => $title,
+        'cssSpecial' => array(
+            "https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css"
+        )
+    ));
 });
 
 /*

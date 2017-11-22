@@ -219,6 +219,10 @@ html, body, .container {
 	padding-bottom: 10px;
 }
 
+.list-group-item:hover {
+	background-color: #eff0f1;
+}
+
 .list-item-title {
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -238,8 +242,25 @@ html, body, .container {
 	white-space: normal;
 }
 
-#second-line-address {
+.second-line-address {
 	/*explicitly set padding to pin width + padding*/
-	padding-left: 32px;
+	padding-left: 36px;
 	margin-bottom: 0;
+	position: relative;
+	bottom: 13px;
+
+}
+
+.hidden-link-span {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+
+.location-website-link {
+	z-index: 2;
+	position: relative;
 }
