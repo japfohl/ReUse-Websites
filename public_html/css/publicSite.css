@@ -235,6 +235,8 @@ html, body, .container {
 
 .side-container-subtitle {
 	font-size: large;
+	text-align: center;
+	font-weight: bolder;
 }
 
 .services-description-text,

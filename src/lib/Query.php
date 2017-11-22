@@ -163,4 +163,35 @@ class Query {
             "SELECT name FROM Reuse_Items WHERE id = $itemId"
         );
     }
+
+    public static function getLocationById($id) {
+        return connectReuseDB()->query(
+            "SELECT loc.name, loc.id, address_line_1, address_line_2, abbreviation, phone, website, city, zip_code, latitude, longitude
+             FROM Reuse_Locations AS loc
+             LEFT JOIN States ON States.id = loc.state_id
+             WHERE loc.id = $id;"
+        );
+    }
+
+    public static function getItemsForLocationByType($locId, $typeId) {
+        return connectReuseDB()->query(
+            "SELECT
+               item.name     AS item_name,
+               category.name AS cat_name
+             FROM Reuse_Locations_Items AS loc_items
+               INNER JOIN Reuse_Items AS item ON item.id = loc_items.item_id
+               INNER JOIN Reuse_Categories AS category ON category.id = item.category_id
+               INNER JOIN Resource_Type AS type ON type.id = loc_items.Type
+             WHERE loc_items.location_id = $locId AND type.id = $typeId
+             ORDER BY item.name;"
+        );
+    }
+
+    public static function getAllItemsForLocation($locId) {
+        return [
+            'reuse' => Query::getItemsForLocationByType($locId, 0)->fetch_all(MYSQLI_ASSOC),
+            'repair' => Query::getItemsForLocationByType($locId, 1)->fetch_all(MYSQLI_ASSOC),
+            'recycle' => Query::getItemsForLocationByType($locId, 2)->fetch_all(MYSQLI_ASSOC)
+        ];
+    }
 }

@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<!--  Logo / Title  -->
-	<link rel="icon" href="img/CSCLogo.png">
+	<link rel="icon" href="/img/CSCLogo.png">
 	<title>The Corvallis Reuse and Repair Directory</title>
 
 	<!-- CSS -->
@@ -17,8 +17,8 @@
 		  crossorigin="anonymous">
 	<link rel="stylesheet"
 		  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href="css/jumbotron-narrow.css" rel="stylesheet">
-	<link href="css/publicSite.css" rel="stylesheet">
+	<link href="/css/jumbotron-narrow.css" rel="stylesheet">
+	<link href="/css/publicSite.css" rel="stylesheet">
 
     <?php if ($this->data['cssSpecial']): ?>
         <?php foreach ($this->data['cssSpecial'] as $css): ?>
@@ -29,7 +29,7 @@
 
     <?php if ($this->data['hasMap']): ?>
         <!--  Include map styles when there is a map  -->
-	    <link href="css/map.css" rel="stylesheet">
+	    <link href="/css/map.css" rel="stylesheet">
     <?php endif; ?>
 
 </head>
@@ -77,7 +77,7 @@
                         </a>
                         <div class="dropdown-content" id="header-recycle-links">
                         <?php foreach($this->data['recycleLocs'] as $r): ?>
-                            <a href="business.php?name=<?php echo rawurlencode($r['name']); ?>">
+                            <a href="/location/<?php echo rawurlencode($r['id']); ?>">
                                 <?php echo $r['name']; ?>
                             </a>
                         <?php endforeach; ?>
@@ -96,12 +96,12 @@
                         <a href="http://sustainablecorvallis.org/"
                            target="_blank"
                            class="header-link">
-                            <img id="header-icon" src="img/CSCRectangular.png">
+                            <img id="header-icon" src="/img/CSCRectangular.png">
                         </a>
                     </li>
                 </ul>
                 <a href ="/">
-                    <img align="left" id="header-icon" src="img/CSCLogo.png">
+                    <img align="left" id="header-icon" src="/img/CSCLogo.png">
                     <h3 class="text-muted" id="header-title">Corvallis-Area ReUse and Repair Directory</h3>
                 </a>
             </nav>

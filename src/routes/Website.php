@@ -215,7 +215,7 @@ $app->get('/locations', function() use ($app) {
 
     // render
     $app->render('app/appBase.php', array(
-        'appTemplate' => 'locationMap.php',
+        'appTemplate' => 'locationListMap.php',
         'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
         'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
         'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
@@ -230,6 +230,35 @@ $app->get('/locations', function() use ($app) {
         'cssSpecial' => array(
             "https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css"
         )
+    ));
+});
+
+$app->get('/location/:id', function($id) use ($app) {
+
+    // validate incoming id
+
+    // TODO: validate id
+
+    // do queries
+    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
+    $location = Query::getLocationById($id)->fetch_all(MYSQLI_ASSOC);
+    $locationItems = Query::getAllItemsForLocation($id);
+
+    // set headers
+    $app->response->headers->set('Content-Type', 'text/html');
+
+    // render
+    $app->render('app/appBase.php', array(
+        'appTemplate' => 'location.php',
+        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
+        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
+        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
+        'hasMap' => true,
+        'locItems' => $locationItems,
+        'locInfo' => $location,
+        'cssSpecial' => [
+            "https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css"
+        ]
     ));
 });
 
