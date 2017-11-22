@@ -236,8 +236,12 @@ $app->get('/locations', function() use ($app) {
 $app->get('/location/:id', function($id) use ($app) {
 
     // validate incoming id
-
-    // TODO: validate id
+    $id = connectReuseDB()->real_escape_string($id);
+    if (ctype_digit($id)) {
+        $id = (int)$id;
+    } else {
+        $app->redirect("/");
+    }
 
     // do queries
     list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
@@ -261,25 +265,3 @@ $app->get('/location/:id', function($id) use ($app) {
         ]
     ));
 });
-
-/*
-
-$app->get('/template', function() use ($app) { // TODO: CHANGE ROUTE NAME
-
-    // do queries
-    list ( $qRepairCats, $qReuseCats, $qRecycleLocs ) = getReuseRepairRecycle();
-
-    // set headers
-    $app->response->headers->set('Content-Type', 'text/html');
-
-    // render
-    $app->render('app/appBase.php', array(
-        'appTemplate' => , // TODO: SET THIS
-        'repairCats' => $qRepairCats->fetch_all(MYSQLI_ASSOC),
-        'reuseCats' => $qReuseCats->fetch_all(MYSQLI_ASSOC),
-        'recycleLocs' => $qRecycleLocs->fetch_all(MYSQLI_ASSOC),
-        'hasMap' => // TODO: SET THIS
-    ));
-});
-
-*/

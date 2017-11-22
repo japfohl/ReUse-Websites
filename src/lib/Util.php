@@ -94,8 +94,6 @@ class Util {
             }
         }
 
-        Util::debug("\n\nFINISHED BUILDING MAP JSON\n\n");
-
         // return properly
         return json_encode($jsonArr);
     }
