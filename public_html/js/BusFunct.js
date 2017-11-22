@@ -9,9 +9,8 @@ var webURL = "http://localhost/Corvallis-Sustainability-ReUse/public_html/index.
 
 var webURL = "";
 // Global
-  var x;
-  var count = 0;
-
+var x;
+var count = 0;
 
 /*
 Function: checkSession();
@@ -56,7 +55,24 @@ function displayStates(){
           $("#state").html(states);
       },
     });
-  }
+}
+
+function displayItems(){
+    $.ajax({type:"GET",
+      url: webURL + "/RUapi/items",
+      dataType: 'json',
+      success: function(data){
+          var items = "";
+          for(var i = 0; i < data.length; i++){
+            items += "<div>";
+            items += "<input type='checkbox' id=" + data[i].id + " value=" + data[i].id + " name='box' >";
+            items += " <label for='" + data[i].id + "'> " + data[i].name + "</label>";
+            items += "</div>";
+          }
+          $("#item-list").html(items);
+      },
+    });
+}
 
 /*
 Function: addNewBusiness();
@@ -72,12 +88,11 @@ function addNewBusiness(){
   var zipcode = document.getElementById("zipcode").value;
   var phone = (document.getElementById("phone").value).replace(/\D/g,'');
   var website = document.getElementById("website").value;
+  var items = getChecked();
+
   var type = "add";
   x = name;
   var flag = 0;
-  //console.log(x);
-  //console.log(name);
-
 
   /* check for blanks in the form */
   if(address == null){
@@ -131,8 +146,7 @@ function addNewBusiness(){
   }
   else{
 
-
-    var tableData = "type="+type+"&name="+name+"&address="+address+"&address2="+address2+"&city="+city+"&state="+state+"&phone="+phone+"&zipcode="+zipcode+"&website="+website;
+    var tableData = "type="+type+"&name="+name+"&address="+address+"&address2="+address2+"&city="+city+"&state="+state+"&phone="+phone+"&zipcode="+zipcode+"&website="+website+"&items="+items;
     $('#output2').empty();
     $.ajax({type:"POST",
       url: webURL + "/RUapi/business",

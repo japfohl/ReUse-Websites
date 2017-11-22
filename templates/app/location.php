@@ -17,7 +17,7 @@ $loc = $this->data['locInfo'][0];
 
             <p class="side-container-subtitle">Contact</p>
 
-            <?php if ($loc['address_line_1'] !== null): ?>
+            <?php if ($loc['address_line_1'] !== null && $loc['address_line_1'] != "null"): ?>
                 <!-- address -->
                 <p class="list-group-item-text">
                     <img src="http://chart.apis.google.com/chart?chst=d_map_pin_letter&amp;chld=%E2%80%A2|F89420" class="pin-icon">
@@ -28,7 +28,7 @@ $loc = $this->data['locInfo'][0];
                 </p>
             <?php endif; ?>
 
-            <?php if ($loc['phone'] !== null): ?>
+            <?php if ($loc['phone'] !== null && $loc['phone'] != "null"): ?>
                 <!-- phone number -->
                 <p class="list-group-item-text">
                     <i class="zmdi zmdi-phone"></i>
@@ -36,7 +36,7 @@ $loc = $this->data['locInfo'][0];
                 </p>
             <?php endif; ?>
 
-            <?php if ($loc['website'] !== null): ?>
+            <?php if ($loc['website'] !== null && $loc['website'] != "null"): ?>
                 <!-- website -->
                 <a href="<?php echo $loc['website']; ?>" class="list-group-item-text location-website-link">
                     <i class="zmdi zmdi-globe"></i>

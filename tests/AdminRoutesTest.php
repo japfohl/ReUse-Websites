@@ -20,7 +20,7 @@ final class AdminRoutesTest extends ApiTestCase
 
     public function testAddBusinessDocRoute()
     {
-        $response = $this->client->request('POST', '/RUapi/addBusinessDoc', [
+        $response = $this->client->request('POST', '/RUapi/business/document', [
             'json' => ['doc_name' => 'my_special_document', 
                        'doc_url' => 'https://www.google.com',
                        'business_id' => 1]

@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link href='https://fonts.googleapis.com/css?family=Rubik:700' rel='stylesheet' type='text/css'>
   <script src="../js/jquery-1.11.1.min.js"></script>
+  <script src="../js/businessHelper.js"></script>
   <script src="../js/searchBusFunct.js"></script>
 <script>
   $(document).ready(function(){
@@ -127,9 +128,17 @@
   <div class="input-group">
     <span class="input-group-addon" id="basic-addonStatesHere">Placeholder</span>
     <div id="statesHere"></div>
-
     <!-- <input type="text" class="form-control" id="state" name="state" value="1" aria-describedby="basic-addon3"> -->
   </div>
+
+  <div class="form-group">
+    <label>Accepted Items: </label>
+    <fieldset id ="select-items">
+      <ul id="item-list">
+      </ul>
+    </fieldset>
+  </div>
+
   <input type="hidden" id="oldNameHidden" name="oldNameHidden">
 
 <br><br><p align="center">

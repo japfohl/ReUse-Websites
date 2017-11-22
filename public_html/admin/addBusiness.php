@@ -28,12 +28,14 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link href='https://fonts.googleapis.com/css?family=Rubik:700' rel='stylesheet' type='text/css'>
   <script src="../js/jquery-1.11.1.min.js"></script>
+  <script src="../js/businessHelper.js"></script>
   <script src="../js/BusFunct.js"></script>
   <script>
   //ONLOAD -- GET requests and checking of session with jQuery
   $(document).ready(function(){
     checkSession();
     displayStates();
+    displayItems();
   });
 
 </script>
@@ -83,6 +85,15 @@
             <label>Website: </label>
             <input type ="url" class="form-control" Id ="website" placeholder="Enter Website Address">
         </div><!-- end formgroup -->
+        <div class="form-group">
+          <label>Accepted Items: </label>
+          <fieldset id ="select-items">
+              <ul id="item-list">
+              </ul>
+            </fieldset>
+        </div>
+
+
         <p align="center">
         </br>
           <!-- Send information to loginCheck function for error handling and ajax call if wrong -->

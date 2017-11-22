@@ -108,9 +108,6 @@ function login()
                 'cipher_mode' => MCRYPT_MODE_CBC,
             )));
         }
-
-        /* close it up */
-        $mysqli->close();
     }
 }
 
@@ -192,7 +189,6 @@ function register()
 
         /* close this request */
         $stmt->close();
-        $mysqli->close();
     }
 }
 

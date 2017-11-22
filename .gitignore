@@ -5,3 +5,8 @@ vendor/
 *.DS_Store*
 *.php_cs.cache
 App/Lib/BingGeocoder/bingApiKey.php
+public_html/css/app.min.css
+public_html/css/app_with_map.min.css
+bin/minifycss
+bin/minifyjs
+public_html/js/app.min.js

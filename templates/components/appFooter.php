@@ -16,6 +16,9 @@
     <!-- jQuery required for proper page rendering (It would be nice to not rely on jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
+    <!-- Application javascript -->
+    <script src="/js/app.min.js"></script>
+
     <?php if ($this->data['preJsSpecial']): ?>
         <?php foreach ($this->data['preJsSpecial'] as $js): ?>
             <!--  Inject JS that needs to run before other scripts  -->
@@ -25,7 +28,6 @@
 
     <?php if ($this->data['hasMap']): ?>
 	    <!-- Inject map stuff if needed -->
-        <script src="/js/mapFunct.js" type="text/javascript"></script>
         <script defer
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiF8JALjnfAymACLHqPAhlrLlUj3y9DTo&callback=initJsonMap">
         </script>
