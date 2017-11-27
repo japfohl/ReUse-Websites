@@ -603,7 +603,8 @@ $app->response->headers->set('Content-Type', 'application/json');
     $app->post('/changeBusiness', function() use ($app) {
         $mysqli = connectReuseDB();
 
-        $oldName =  $mysqli->real_escape_string(Util::fetch_val('oldName', $_POST));
+        $id = $mysqli->real_escape_string(Util::fetch_val('id', $_POST));
+        $oldName = $mysqli->real_escape_string(Util::fetch_val('oldName', $_POST));
         $name = $mysqli->real_escape_string(Util::fetch_val('name', $_POST));
         $address = $mysqli->real_escape_string(Util::fetch_val('add1', $_POST));
         $address2 = $mysqli->real_escape_string(Util::fetch_val('add2', $_POST));
@@ -614,6 +615,8 @@ $app->response->headers->set('Content-Type', 'application/json');
         $website = $mysqli->real_escape_string(Util::fetch_val('website', $_POST));
         $latitude = $mysqli->real_escape_string(Util::fetch_val('latitude', $_POST));
         $longitude = $mysqli->real_escape_string(Util::fetch_val('longitude', $_POST));
+        $items = Util::fetch_val('items', $_POST);
+        $items_set = new \Ds\Set($items);
 
 
         if($state != 'undefined' && $oldName != 'undefined'){
@@ -714,6 +717,7 @@ $app->response->headers->set('Content-Type', 'application/json');
         $latitude = $mysqli->real_escape_string(Util::fetch_val('latitude', $_POST, null));
         $longitude = $mysqli->real_escape_string(Util::fetch_val('longitude', $_POST, null));
         $website = $mysqli->real_escape_string(Util::fetch_val('website', $_POST, null));
+        $accepted_items = $mysqli->real_escape_string(Util::fetch_val('items', $_POST, null));
         
         /* Convert state_id to the string it references */
         if (!($stmt = $mysqli->prepare("SELECT abbreviation FROM  `States` WHERE id = ?"))){
@@ -762,7 +766,7 @@ $app->response->headers->set('Content-Type', 'application/json');
                                  VALUES ('$location_id', '$this_item_id')")) {
                 $app->log->debug('Reuse_Locations_Items query failed.');
                 $app->log->debug('LOCATION ID: '.$location_id);
-                $app->log->debug('ITEM ID: '.$item_id);
+                $app->log->debug('ITEM ID: '.$this_item_id);
             }
         }
 
@@ -984,4 +988,3 @@ $app->response->headers->set('Content-Type', 'application/json');
         $mysqli->close();
     });
 });
-?>
